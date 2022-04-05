@@ -79,6 +79,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -125,6 +126,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -145,6 +147,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 					AllowUsernamePassword:      true,
 					AllowExternalIDP:           true,
 					ForceMFA:                   true,
+					IgnoreUnknownUsernames:     true,
 					PasswordlessType:           domain.PasswordlessTypeAllowed,
 					PasswordCheckLifetime:      time.Hour * 1,
 					ExternalLoginCheckLifetime: time.Hour * 2,
@@ -172,6 +175,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -186,6 +190,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 							eventFromEventPusher(
 								org.NewLoginPolicyAddedEvent(context.Background(),
 									&org.NewAggregate("org1", "org1").Aggregate,
+									true,
 									true,
 									true,
 									true,
@@ -213,6 +218,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 					AllowExternalIDP:           true,
 					ForceMFA:                   true,
 					HidePasswordReset:          true,
+					IgnoreUnknownUsernames:     true,
 					PasswordlessType:           domain.PasswordlessTypeAllowed,
 					PasswordCheckLifetime:      time.Hour * 1,
 					ExternalLoginCheckLifetime: time.Hour * 2,
@@ -232,6 +238,7 @@ func TestCommandSide_AddLoginPolicy(t *testing.T) {
 					AllowExternalIDP:           true,
 					ForceMFA:                   true,
 					HidePasswordReset:          true,
+					IgnoreUnknownUsernames:     true,
 					PasswordlessType:           domain.PasswordlessTypeAllowed,
 					PasswordCheckLifetime:      time.Hour * 1,
 					ExternalLoginCheckLifetime: time.Hour * 2,
@@ -292,11 +299,12 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				policy: &domain.LoginPolicy{
-					AllowRegister:         true,
-					AllowUsernamePassword: true,
-					AllowExternalIDP:      true,
-					ForceMFA:              true,
-					PasswordlessType:      domain.PasswordlessTypeAllowed,
+					AllowRegister:          true,
+					AllowUsernamePassword:  true,
+					AllowExternalIDP:       true,
+					ForceMFA:               true,
+					IgnoreUnknownUsernames: true,
+					PasswordlessType:       domain.PasswordlessTypeAllowed,
 				},
 			},
 			res: res{
@@ -315,11 +323,12 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 				ctx:   context.Background(),
 				orgID: "org1",
 				policy: &domain.LoginPolicy{
-					AllowRegister:         true,
-					AllowUsernamePassword: true,
-					AllowExternalIDP:      true,
-					ForceMFA:              true,
-					PasswordlessType:      domain.PasswordlessTypeAllowed,
+					AllowRegister:          true,
+					AllowUsernamePassword:  true,
+					AllowExternalIDP:       true,
+					ForceMFA:               true,
+					IgnoreUnknownUsernames: true,
+					PasswordlessType:       domain.PasswordlessTypeAllowed,
 				},
 			},
 			res: res{
@@ -340,6 +349,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -354,6 +364,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
 								false,
+								true,
 								true,
 								true,
 								true,
@@ -378,6 +389,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 					AllowUsernamePassword:      true,
 					AllowExternalIDP:           true,
 					ForceMFA:                   true,
+					IgnoreUnknownUsernames:     true,
 					PasswordlessType:           domain.PasswordlessTypeAllowed,
 					PasswordCheckLifetime:      time.Hour * 1,
 					ExternalLoginCheckLifetime: time.Hour * 2,
@@ -404,6 +416,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -418,6 +431,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
 								false,
+								true,
 								true,
 								true,
 								true,
@@ -469,6 +483,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -482,6 +497,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							instance.NewLoginPolicyAddedEvent(context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,
@@ -501,6 +517,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 							eventFromEventPusher(
 								newLoginPolicyChangedEvent(context.Background(),
 									"org1",
+									false,
 									false,
 									false,
 									false,
@@ -527,6 +544,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 					AllowUsernamePassword:      false,
 					AllowExternalIDP:           false,
 					ForceMFA:                   false,
+					IgnoreUnknownUsernames:     false,
 					PasswordlessType:           domain.PasswordlessTypeNotAllowed,
 					PasswordCheckLifetime:      time.Hour * 10,
 					ExternalLoginCheckLifetime: time.Hour * 20,
@@ -546,6 +564,7 @@ func TestCommandSide_ChangeLoginPolicy(t *testing.T) {
 					AllowExternalIDP:           false,
 					ForceMFA:                   false,
 					HidePasswordReset:          false,
+					IgnoreUnknownUsernames:     false,
 					PasswordlessType:           domain.PasswordlessTypeNotAllowed,
 					PasswordCheckLifetime:      time.Hour * 10,
 					ExternalLoginCheckLifetime: time.Hour * 20,
@@ -633,6 +652,7 @@ func TestCommandSide_RemoveLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -776,6 +796,7 @@ func TestCommandSide_AddIDPProviderLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -810,6 +831,7 @@ func TestCommandSide_AddIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -869,6 +891,7 @@ func TestCommandSide_AddIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1036,6 +1059,7 @@ func TestCommandSide_RemoveIDPProviderLoginPolicy(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -1070,6 +1094,7 @@ func TestCommandSide_RemoveIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1121,6 +1146,7 @@ func TestCommandSide_RemoveIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1179,6 +1205,7 @@ func TestCommandSide_RemoveIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1245,6 +1272,7 @@ func TestCommandSide_RemoveIDPProviderLoginPolicy(t *testing.T) {
 						eventFromEventPusher(
 							org.NewLoginPolicyAddedEvent(context.Background(),
 								&org.NewAggregate("org1", "org1").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1867,7 +1895,7 @@ func TestCommandSide_RemoveMultiFactorLoginPolicy(t *testing.T) {
 	}
 }
 
-func newLoginPolicyChangedEvent(ctx context.Context, orgID string, usernamePassword, register, externalIDP, mfa, passwordReset bool,
+func newLoginPolicyChangedEvent(ctx context.Context, orgID string, usernamePassword, register, externalIDP, mfa, passwordReset, ignoreUnknownUsernames bool,
 	passwordlessType domain.PasswordlessType,
 	passwordLifetime, externalLoginLifetime, mfaInitSkipLifetime, secondFactorLifetime, multiFactorLifetime *time.Duration) *org.LoginPolicyChangedEvent {
 	changes := []policy.LoginPolicyChanges{
@@ -1876,6 +1904,7 @@ func newLoginPolicyChangedEvent(ctx context.Context, orgID string, usernamePassw
 		policy.ChangeAllowExternalIDP(externalIDP),
 		policy.ChangeForceMFA(mfa),
 		policy.ChangeHidePasswordReset(passwordReset),
+		policy.ChangeIgnoreUnknownUsernames(ignoreUnknownUsernames),
 		policy.ChangePasswordlessType(passwordlessType),
 	}
 	if passwordLifetime != nil {

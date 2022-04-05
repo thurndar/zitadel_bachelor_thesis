@@ -248,6 +248,7 @@ func (c *Commands) setAllowedLoginPolicy(ctx context.Context, orgID string, feat
 		policy.AllowExternalIDP,
 		policy.ForceMFA,
 		policy.HidePasswordReset,
+		policy.IgnoreUnknownUsernames,
 		policy.PasswordlessType,
 		policy.PasswordCheckLifetime,
 		policy.ExternalLoginCheckLifetime,

@@ -165,6 +165,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 								false,
 								false,
 								false,
+								false,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -344,6 +345,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,
@@ -554,6 +556,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,
@@ -774,6 +777,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,
@@ -1014,6 +1018,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 								true,
 								true,
 								true,
+								true,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -1026,6 +1031,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 							org.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,
@@ -1046,6 +1052,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								true,
 								true,
 								true,
 								true,
@@ -1324,6 +1331,7 @@ func TestCommandSide_SetOrgFeatures(t *testing.T) {
 								false,
 								false,
 								false,
+								false,
 								domain.PasswordlessTypeAllowed,
 								time.Hour*1,
 								time.Hour*2,
@@ -1584,6 +1592,7 @@ func TestCommandSide_RemoveOrgFeatures(t *testing.T) {
 							instance.NewLoginPolicyAddedEvent(
 								context.Background(),
 								&instance.NewAggregate("INSTANCE").Aggregate,
+								false,
 								false,
 								false,
 								false,

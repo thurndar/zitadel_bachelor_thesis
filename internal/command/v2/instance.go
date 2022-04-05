@@ -49,6 +49,7 @@ type InstanceSetup struct {
 		AllowExternalIDP           bool
 		ForceMFA                   bool
 		HidePasswordReset          bool
+		IgnoreUnknownUsernames     bool
 		PasswordlessType           domain.PasswordlessType
 		PasswordCheckLifetime      time.Duration
 		ExternalLoginCheckLifetime time.Duration
@@ -146,6 +147,7 @@ func (command *Command) SetUpInstance(ctx context.Context, setup *InstanceSetup)
 	if err != nil {
 		return nil, err
 	}
+	instanceID = "system"
 	ctx = authz.SetCtxData(authz.WithInstanceID(ctx, instanceID), authz.CtxData{OrgID: instanceID, ResourceOwner: instanceID})
 
 	orgID, err := id.SonyFlakeGenerator.Next()
@@ -194,6 +196,7 @@ func (command *Command) SetUpInstance(ctx context.Context, setup *InstanceSetup)
 			setup.LoginPolicy.AllowExternalIDP,
 			setup.LoginPolicy.ForceMFA,
 			setup.LoginPolicy.HidePasswordReset,
+			setup.LoginPolicy.IgnoreUnknownUsernames,
 			setup.LoginPolicy.PasswordlessType,
 			setup.LoginPolicy.PasswordCheckLifetime,
 			setup.LoginPolicy.ExternalLoginCheckLifetime,
