@@ -4,12 +4,29 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"log"
 	"reflect"
 	"sync"
 
 	"github.com/caos/zitadel/internal/errors"
 	"github.com/caos/zitadel/internal/eventstore/repository"
+	"github.com/nats-io/nats.go"
 )
+
+var (
+	nc *nats.Conn
+)
+
+func init() {
+	// Connect to NATS
+	nats_instance := "localhost:4222"
+	var err error
+	nc, err = nats.Connect(nats_instance)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer nc.Close()
+}
 
 //Eventstore abstracts all functions needed to store valid events
 // and filters the stored events

@@ -1,10 +1,13 @@
 package eventstore
 
 import (
+	"encoding/json"
+	"log"
 	"sync"
 
 	v1 "github.com/caos/zitadel/internal/eventstore/v1"
 	"github.com/caos/zitadel/internal/eventstore/v1/models"
+	"github.com/nats-io/nats.go"
 )
 
 var (
@@ -19,67 +22,96 @@ type Subscription struct {
 
 //SubscribeAggregates subscribes for all events on the given aggregates
 func SubscribeAggregates(eventQueue chan Event, aggregates ...AggregateType) *Subscription {
+	// types := make(map[AggregateType][]EventType, len(aggregates))
+	// for _, aggregate := range aggregates {
+	// 	types[aggregate] = nil
+	// }
+	// sub := &Subscription{
+	// 	Events: eventQueue,
+	// 	types:  types,
+	// }
+
+	// subsMutext.Lock()
+	// defer subsMutext.Unlock()
+
+	// for _, aggregate := range aggregates {
+	// 	subscriptions[aggregate] = append(subscriptions[aggregate], sub)
+	// }
+
+	// return sub
+
 	types := make(map[AggregateType][]EventType, len(aggregates))
 	for _, aggregate := range aggregates {
 		types[aggregate] = nil
 	}
-	sub := &Subscription{
-		Events: eventQueue,
-		types:  types,
-	}
 
-	subsMutext.Lock()
-	defer subsMutext.Unlock()
-
-	for _, aggregate := range aggregates {
-		subscriptions[aggregate] = append(subscriptions[aggregate], sub)
-	}
-
-	return sub
+	return SubscribeEventTypes(eventQueue, types)
 }
 
 //SubscribeEventTypes subscribes for the given event types
 // if no event types are provided the subscription is for all events of the aggregate
+// Subscriber but in wrong package :-)
 func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventType) *Subscription {
-	aggregates := make([]AggregateType, len(types))
+	// aggregates := make([]AggregateType, len(types))
 	sub := &Subscription{
 		Events: eventQueue,
 		types:  types,
 	}
 
-	subsMutext.Lock()
-	defer subsMutext.Unlock()
+	// subsMutext.Lock()
+	// defer subsMutext.Unlock()
 
-	for _, aggregate := range aggregates {
-		subscriptions[aggregate] = append(subscriptions[aggregate], sub)
+	// for _, aggregate := range aggregates {
+	// 	subscriptions[aggregate] = append(subscriptions[aggregate], sub)
+	// }
+	for aggregate := range types {
+		log.Printf("Try to subscribe to %s", aggregate)
+		_, err := nc.Subscribe(string(aggregate)+".>", func(msg *nats.Msg) {
+			log.Printf("Entering the function call of event: %s", aggregate)
+			// nats msg to zitadel event
+			var event Event
+			json.Unmarshal(msg.Data, event)
+			log.Println(event)
+
+			sub.Events <- event
+		})
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 	return sub
 }
 
+// actually publisher
 func notify(events []Event) {
 	go v1.Notify(MapEventsToV1Events(events))
 	subsMutext.Lock()
 	defer subsMutext.Unlock()
 	for _, event := range events {
-		subs, ok := subscriptions[event.Aggregate().Type]
-		if !ok {
-			continue
-		}
-		for _, sub := range subs {
-			eventTypes := sub.types[event.Aggregate().Type]
-			//subscription for all events
-			if len(eventTypes) == 0 {
-				sub.Events <- event
-				continue
-			}
-			//subscription for certain events
-			for _, eventType := range eventTypes {
-				if event.Type() == eventType {
-					sub.Events <- event
-					break
-				}
-			}
+		// subs, ok := subscriptions[event.Aggregate().Type]
+		// if !ok {
+		// 	continue
+		// }
+		// for _, sub := range subs {
+		// 	eventTypes := sub.types[event.Aggregate().Type]
+		// 	//subscription for all events
+		// 	if len(eventTypes) == 0 {
+		// 		sub.Events <- event
+		// 		continue
+		// 	}
+		// 	//subscription for certain events
+		// 	for _, eventType := range eventTypes {
+		// 		if event.Type() == eventType {
+		// 			sub.Events <- event
+		// 			break
+		// 		}
+		// 	}
+		// }
+		msg, _ := json.Marshal(event)
+		err := nc.Publish(string(event.Type()), msg)
+		if err != nil {
+			log.Println(err)
 		}
 	}
 }
