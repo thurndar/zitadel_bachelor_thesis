@@ -1,0 +1,189 @@
+syntax = "proto3";
+
+import "zitadel/idp.proto";
+import "zitadel/user.proto";
+import "zitadel/object.proto";
+import "zitadel/options.proto";
+import "zitadel/org.proto";
+import "zitadel/policy.proto";
+import "zitadel/text.proto";
+import "zitadel/member.proto";
+import "zitadel/features.proto";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "validate/validate.proto";
+
+package zitadel.admin.v1;
+
+option go_package ="github.com/caos/zitadel/pkg/grpc/admin";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "Event API aka Admin";
+        version: "1.0";
+        description: "This API is intended be used as subscription mechanism to retreive event from";
+        contact:{
+            name: "CAOS developers of ZITADEL"
+            url: "https://zitadel.ch"
+            email: "hi@zitadel.ch"
+        }
+        license: {
+            name: "Apache 2.0",
+            url: "https://github.com/caos/zitadel/blob/main/LICENSE";
+        };
+    };
+
+    schemes: HTTPS;
+    schemes: HTTP;
+
+    consumes: "application/json";
+    consumes: "application/grpc";
+
+    produces: "application/json";
+    produces: "application/grpc";
+
+    consumes: "application/grpc-web+proto";
+    produces: "application/grpc-web+proto";
+
+    host: "api.zitadel.ch";
+    base_path: "/events/v1";
+
+    external_docs: {
+        description: "Detailed information about ZITADEL",
+        url: "https://docs.zitadel.ch"
+    }
+
+    security_definitions: {
+		security: {
+			key: "BasicAuth";
+			value: {
+				type: TYPE_BASIC;
+			}
+		}
+		security: {
+			key: "OAuth2";
+			value: {
+				type: TYPE_OAUTH2;
+				flow: FLOW_ACCESS_CODE;
+				authorization_url: "https://accounts.zitadel.io/oauth/v2/authorize";
+				token_url: "https://api.zitadel.io/oauth/v2/token";
+                scopes: {
+					scope: {
+						key: "openid";
+						value: "openid";
+					}
+                    scope: {
+                        key: "urn:zitadel:iam:org:project:id:100992085158584780:aud";
+                        value: "urn:zitadel:iam:org:project:id:100992085158584780:aud";
+                    }
+				}
+			}
+		}
+	}
+    security: {
+		security_requirement: {
+			key: "OAuth2";
+            value: {
+                scope: "openid";
+                scope: "urn:zitadel:iam:org:project:id:100992085158584780:aud";
+            }
+		}
+	}
+    responses: {
+        key: "403";
+        value: {
+            description: "Returned when the user does not have permission to access the resource.";
+            schema: {
+                json_schema: {
+                    ref: "#/definitions/rpcStatus";
+                }
+            }
+        }
+    }
+    responses: {
+        key: "404";
+        value: {
+            description: "Returned when the resource does not exist.";
+            schema: {
+                json_schema: {
+                    ref: "#/definitions/rpcStatus";
+                }
+            }
+        }
+    }
+
+    extensions: {
+		key: "x-zitadel-orgid";
+		value: {
+			string_value: "your-org-id";
+		}
+	}
+};
+
+service AdminService {
+    //Indicates if ZITADEL is running.
+    // It respondes as soon as ZITADEL started
+    rpc Healthz(HealthzRequest) returns (HealthzResponse) {
+        option (google.api.http) = {
+            get: "/healthz";
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "probes";
+            responses: {
+                key: "200";
+                value: {
+                    description: "ZITADEL started";
+                };
+            }
+            responses: {
+                key: "default";
+                value: {
+                    description: "ZITADEL NOT started yet";
+                };
+            }
+        };
+    }
+
+    rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+        option (google.api.http) = {
+            post: "/events"
+        };
+    }
+}
+
+
+//This is an empty request
+message HealthzRequest {}
+
+//This is an empty response
+message HealthzResponse {}
+
+message ListEventsRequest {
+    uint32 limit = 1;
+    uint64 sequence_greater = 2;
+    uint64 sequence_less = 3;
+    bool desc = 4;
+    repeated AggregateQuery aggregates = 5;
+}
+
+message AggregateQuery {
+    repeated string types = 1;
+    repeated string ids = 2;
+    EventQuery event = 3;
+}
+
+message EventQuery {
+    repeated string types = 1;
+}
+
+message ListEventsResponse {
+    repeated Event events = 1;
+}
+
+message Event {}
