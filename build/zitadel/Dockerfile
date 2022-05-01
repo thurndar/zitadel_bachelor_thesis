@@ -1,4 +1,5 @@
 ARG GO_VERSION=1.17
+ARG BUILDARCH=amd64
 
 #######################
 ## These steps set platform / arch type specific variables
@@ -51,7 +52,7 @@ RUN mkdir -p src/github.com/caos/zitadel
 WORKDIR /go/src/github.com/caos/zitadel
 
 #download modules
-COPY ./go.* .
+COPY ./go.* ./
 RUN go mod download
 
 # install tools
@@ -145,25 +146,25 @@ ENV GID=1000
 ENTRYPOINT [ "sh", "-c" ]
 CMD [ "rsync -a --chown $UID:$GID /src/ /dest" ]
 
-#######################
-## Go test
-#######################
-FROM go-base as go-test
+# #######################
+# ## Go test
+# #######################
+# FROM go-base as go-test
 
-# Migrations for cockroach-secure
-RUN go install github.com/rakyll/statik \
-    && go test -race -v -coverprofile=profile.cov $(go list ./... | grep -v /operator/)
+# # Migrations for cockroach-secure
+# RUN go install github.com/rakyll/statik \
+#     && go test -race -v -coverprofile=profile.cov $(go list ./... | grep -v /operator/)
 
-#######################
-## Go test results
-#######################
-FROM scratch as go-codecov
-COPY --from=go-test /go/src/github.com/caos/zitadel/profile.cov profile.cov
+# #######################
+# ## Go test results
+# #######################
+# FROM scratch as go-codecov
+# COPY --from=go-test /go/src/github.com/caos/zitadel/profile.cov profile.cov
 
 #######################
 ## Go prod build
 #######################
-FROM go-test as prod-go-build
+FROM go-base as prod-go-build
 ARG BUILDARCH
 ARG VERSION=""
 
