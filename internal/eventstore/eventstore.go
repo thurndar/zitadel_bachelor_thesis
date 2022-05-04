@@ -71,7 +71,7 @@ func (es *Eventstore) Push(ctx context.Context, cmds ...Command) ([]Event, error
 		return nil, err
 	}
 
-	go notify(eventReaders)
+	go notify(ctx, eventReaders)
 	return eventReaders, nil
 }
 

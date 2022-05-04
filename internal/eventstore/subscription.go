@@ -7,7 +7,9 @@ import (
 
 	v1 "github.com/caos/zitadel/internal/eventstore/v1"
 	"github.com/caos/zitadel/internal/eventstore/v1/models"
+	"github.com/caos/zitadel/internal/telemetry/tracing"
 	"github.com/nats-io/nats.go"
+	"golang.org/x/net/context"
 )
 
 var (
@@ -68,12 +70,18 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 		log.Printf("Try to subscribe to %s", aggregate)
 		_, err := nc.Subscribe(string(aggregate)+".>", func(msg *nats.Msg) {
 			log.Printf("Entering the function call of event: %s", aggregate)
+			ctx, subscribeEventTypeSpan := tracing.NewNamedSpan(context.TODO(), "subscribeEventTypeSpan")
+			var err error
+			defer func() { subscribeEventTypeSpan.EndWithError(err) }()
+
 			// nats msg to zitadel event
 			var event Event
+			tracing.SetLabel(subscribeEventTypeSpan, "event.type", string(event.Type()))
 			json.Unmarshal(msg.Data, event)
 			log.Println(event)
 
 			sub.Events <- event
+			subscribeEventTypeSpan.End()
 		})
 		if err != nil {
 			log.Println(err)
@@ -84,7 +92,7 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 }
 
 // actually publisher
-func notify(events []Event) {
+func notify(ctx context.Context, events []Event) {
 	go v1.Notify(MapEventsToV1Events(events))
 	subsMutext.Lock()
 	defer subsMutext.Unlock()
@@ -108,11 +116,21 @@ func notify(events []Event) {
 		// 		}
 		// 	}
 		// }
+
+		// span is missing labels, we don't know which event this mothertrucker is
+		// eventtype
+		ctx, notifySpan := tracing.NewNamedSpan(ctx, "notify")
+		var err error
+		defer func() { notifySpan.EndWithError(err) }()
+		tracing.SetLabel(notifySpan, "event.type", string(event.Type()))
+
 		msg, _ := json.Marshal(event)
-		err := nc.Publish(string(event.Type()), msg)
+		err = nc.Publish(string(event.Type()), msg)
 		if err != nil {
 			log.Println(err)
 		}
+
+		notifySpan.End()
 	}
 }
 

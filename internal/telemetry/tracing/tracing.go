@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"go.opentelemetry.io/otel/attribute"
 	sdk_trace "go.opentelemetry.io/otel/sdk/trace"
 	api_trace "go.opentelemetry.io/otel/trace"
 )
@@ -82,4 +83,8 @@ func NewSpanHTTP(r *http.Request) (*http.Request, *Span) {
 
 func TraceIDFromCtx(ctx context.Context) string {
 	return api_trace.SpanFromContext(ctx).SpanContext().TraceID().String()
+}
+
+func SetLabel(s *Span, key string, value string) {
+	s.span.SetAttributes(attribute.String(key, value))
 }
