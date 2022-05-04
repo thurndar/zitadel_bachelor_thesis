@@ -70,7 +70,7 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 		log.Printf("Try to subscribe to %s", aggregate)
 		_, err := nc.Subscribe(string(aggregate)+".>", func(msg *nats.Msg) {
 			log.Printf("Entering the function call of event: %s", aggregate)
-			ctx, subscribeEventTypeSpan := tracing.NewNamedSpan(context.TODO(), "subscribeEventTypeSpan")
+			_, subscribeEventTypeSpan := tracing.NewNamedSpan(context.TODO(), "subscribeEventTypeSpan")
 			var err error
 			defer func() { subscribeEventTypeSpan.EndWithError(err) }()
 
@@ -119,7 +119,7 @@ func notify(ctx context.Context, events []Event) {
 
 		// span is missing labels, we don't know which event this mothertrucker is
 		// eventtype
-		ctx, notifySpan := tracing.NewNamedSpan(ctx, "notify")
+		_, notifySpan := tracing.NewNamedSpan(ctx, "notify")
 		var err error
 		defer func() { notifySpan.EndWithError(err) }()
 		tracing.SetLabel(notifySpan, "event.type", string(event.Type()))
