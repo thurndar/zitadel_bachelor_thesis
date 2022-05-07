@@ -35,7 +35,7 @@ func NewRemoveProjectGrantMemberUniqueConstraint(projectID, userID, grantID stri
 }
 
 type GrantMemberAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Roles   []string `json:"roles"`
 	UserID  string   `json:"userId"`
@@ -71,19 +71,20 @@ func NewProjectGrantMemberAddedEvent(
 
 func GrantMemberAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantMemberAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-9f0sf", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantMemberChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Roles   []string `json:"roles"`
 	GrantID string   `json:"grantId"`
@@ -119,19 +120,20 @@ func NewProjectGrantMemberChangedEvent(
 
 func GrantMemberChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantMemberChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-39fi8", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantMemberRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserID  string `json:"userId"`
 	GrantID string `json:"grantId"`
@@ -164,19 +166,20 @@ func NewProjectGrantMemberRemovedEvent(
 
 func GrantMemberRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantMemberRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-173fM", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantMemberCascadeRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserID  string `json:"userId"`
 	GrantID string `json:"grantId"`
@@ -209,13 +212,14 @@ func NewProjectGrantMemberCascadeRemovedEvent(
 
 func GrantMemberCascadeRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantMemberCascadeRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-3kfs3", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

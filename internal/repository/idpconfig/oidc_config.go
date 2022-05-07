@@ -17,7 +17,7 @@ const (
 )
 
 type OIDCConfigAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID           string              `json:"idpConfigId"`
 	ClientID              string              `json:"clientId,omitempty"`
@@ -68,19 +68,20 @@ func NewOIDCConfigAddedEvent(
 
 func OIDCConfigAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type OIDCConfigChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID string `json:"idpConfigId"`
 
@@ -173,13 +174,14 @@ func ChangeScopes(scopes []string) func(*OIDCConfigChangedEvent) {
 
 func OIDCConfigChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

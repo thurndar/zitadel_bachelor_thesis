@@ -19,7 +19,7 @@ const (
 )
 
 type ApplicationKeyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID          string              `json:"applicationId"`
 	ClientID       string              `json:"clientId,omitempty"`
@@ -64,19 +64,20 @@ func NewApplicationKeyAddedEvent(
 
 func ApplicationKeyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationKeyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-BFd15", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ApplicationKeyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	KeyID string `json:"keyId,omitempty"`
 }
@@ -106,12 +107,13 @@ func NewApplicationKeyRemovedEvent(
 
 func ApplicationKeyRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	applicationKeyRemoved := &ApplicationKeyRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, applicationKeyRemoved)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5Gm9s", "unable to unmarshal application key removed")
 	}
+	applicationKeyRemoved.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return applicationKeyRemoved, nil
 }

@@ -15,7 +15,7 @@ const (
 )
 
 type JWTConfigAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID  string `json:"idpConfigId"`
 	JWTEndpoint  string `json:"jwtEndpoint,omitempty"`
@@ -52,19 +52,20 @@ func NewJWTConfigAddedEvent(
 
 func JWTConfigAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &JWTConfigAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "JWT-m0fwf", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type JWTConfigChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID string `json:"idpConfigId"`
 
@@ -128,13 +129,14 @@ func ChangeHeaderName(headerName string) func(*JWTConfigChangedEvent) {
 
 func JWTConfigChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &JWTConfigChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "JWT-fk3fs", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

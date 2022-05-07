@@ -23,7 +23,7 @@ const (
 )
 
 type HumanPasswordChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Secret         *crypto.CryptoValue `json:"secret,omitempty"`
 	ChangeRequired bool                `json:"changeRequired"`
@@ -59,18 +59,19 @@ func NewHumanPasswordChangedEvent(
 
 func HumanPasswordChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanAdded := &HumanPasswordChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-4M0sd", "unable to unmarshal human password changed")
 	}
+	humanAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanAdded, nil
 }
 
 type HumanPasswordCodeAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Code             *crypto.CryptoValue     `json:"code,omitempty"`
 	Expiry           time.Duration           `json:"expiry,omitempty"`
@@ -106,18 +107,19 @@ func NewHumanPasswordCodeAddedEvent(
 
 func HumanPasswordCodeAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanAdded := &HumanPasswordCodeAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Ms90d", "unable to unmarshal human password code added")
 	}
+	humanAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanAdded, nil
 }
 
 type HumanPasswordCodeSentEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanPasswordCodeSentEvent) Data() interface{} {
@@ -145,7 +147,7 @@ func HumanPasswordCodeSentEventMapper(event *repository.Event) (eventstore.Event
 }
 
 type HumanPasswordCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -174,18 +176,19 @@ func NewHumanPasswordCheckSucceededEvent(
 
 func HumanPasswordCheckSucceededEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanAdded := &HumanPasswordCheckSucceededEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5M9sd", "unable to unmarshal human password check succeeded")
 	}
+	humanAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanAdded, nil
 }
 
 type HumanPasswordCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -214,12 +217,13 @@ func NewHumanPasswordCheckFailedEvent(
 
 func HumanPasswordCheckFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanAdded := &HumanPasswordCheckFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-4m9fs", "unable to unmarshal human password check failed")
 	}
+	humanAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanAdded, nil
 }

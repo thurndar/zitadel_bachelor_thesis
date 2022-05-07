@@ -18,7 +18,7 @@ const (
 )
 
 type HumanProfileChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	FirstName         string         `json:"firstName,omitempty"`
 	LastName          string         `json:"lastName,omitempty"`
@@ -97,12 +97,13 @@ func ChangeGender(gender domain.Gender) func(event *HumanProfileChangedEvent) {
 
 func HumanProfileChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	profileChanged := &HumanProfileChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, profileChanged)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5M0pd", "unable to unmarshal human profile changed")
 	}
+	profileChanged.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return profileChanged, nil
 }

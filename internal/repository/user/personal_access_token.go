@@ -17,7 +17,7 @@ const (
 )
 
 type PersonalAccessTokenAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID    string    `json:"tokenId"`
 	Expiration time.Time `json:"expiration"`
@@ -53,18 +53,19 @@ func NewPersonalAccessTokenAddedEvent(
 
 func PersonalAccessTokenAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenAdded := &PersonalAccessTokenAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Dbges", "unable to unmarshal token added")
 	}
+	tokenAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenAdded, nil
 }
 
 type PersonalAccessTokenRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID string `json:"tokenId"`
 }
@@ -94,12 +95,13 @@ func NewPersonalAccessTokenRemovedEvent(
 
 func PersonalAccessTokenRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenRemoved := &PersonalAccessTokenRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenRemoved)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Dbneg", "unable to unmarshal token removed")
 	}
+	tokenRemoved.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenRemoved, nil
 }

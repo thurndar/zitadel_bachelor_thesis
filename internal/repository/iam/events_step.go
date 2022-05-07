@@ -20,7 +20,7 @@ const (
 )
 
 type SetupStepEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Step domain.Step `json:"Step"`
 	Done bool        `json:"-"`
@@ -54,9 +54,9 @@ func (e *SetupStepEvent) UniqueConstraints() []*eventstore.EventUniqueConstraint
 
 func SetupStepMapper(event *repository.Event) (eventstore.Event, error) {
 	step := &SetupStepEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
-		Done:      eventstore.EventType(event.Type) == SetupDoneEventType,
-		Step:      domain.Step1,
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
+		Done: eventstore.EventType(event.Type) == SetupDoneEventType,
+		Step: domain.Step1,
 	}
 	if len(event.Data) == 0 {
 		return step, nil
@@ -65,6 +65,7 @@ func SetupStepMapper(event *repository.Event) (eventstore.Event, error) {
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "IAM-O6rVg", "unable to unmarshal step")
 	}
+	step.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return step, nil
 }

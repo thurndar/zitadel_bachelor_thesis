@@ -27,7 +27,7 @@ func NewRemoveIDPConfigNameUniqueConstraint(idpConfigName, resourceOwner string)
 }
 
 type IDPConfigAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ConfigID     string                      `json:"idpConfigId"`
 	Name         string                      `json:"name,omitempty"`
@@ -64,19 +64,20 @@ func (e *IDPConfigAddedEvent) UniqueConstraints() []*eventstore.EventUniqueConst
 
 func IDPConfigAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IDPConfigAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type IDPConfigChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ConfigID     string                       `json:"idpConfigId"`
 	Name         *string                      `json:"name,omitempty"`
@@ -141,19 +142,20 @@ func ChangeAutoRegister(autoRegister bool) func(*IDPConfigChangedEvent) {
 
 func IDPConfigChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IDPConfigChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type IDPConfigDeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ConfigID string `json:"idpConfigId"`
 }
@@ -179,19 +181,20 @@ func (e *IDPConfigDeactivatedEvent) UniqueConstraints() []*eventstore.EventUniqu
 
 func IDPConfigDeactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IDPConfigDeactivatedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type IDPConfigReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ConfigID string `json:"idpConfigId"`
 }
@@ -217,19 +220,20 @@ func (e *IDPConfigReactivatedEvent) UniqueConstraints() []*eventstore.EventUniqu
 
 func IDPConfigReactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IDPConfigReactivatedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type IDPConfigRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ConfigID string `json:"idpConfigId"`
 	name     string
@@ -258,13 +262,14 @@ func (e *IDPConfigRemovedEvent) UniqueConstraints() []*eventstore.EventUniqueCon
 
 func IDPConfigRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IDPConfigRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-plaBZ", "unable to unmarshal event")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

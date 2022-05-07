@@ -75,10 +75,12 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 			defer func() { subscribeEventTypeSpan.EndWithError(err) }()
 
 			// nats msg to zitadel event
-			var event Event
+			var event = eventStructs[EventType(msg.Subject)]()
 			// tracing.SetLabel(subscribeEventTypeSpan, "event.type", string(event.Type()))
-			json.Unmarshal(msg.Data, event)
-			log.Println(event)
+			err = json.Unmarshal(msg.Data, event)
+			if err != nil {
+				log.Printf("err in unmarshal: %v", err)
+			}
 
 			sub.Events <- event
 			subscribeEventTypeSpan.End()

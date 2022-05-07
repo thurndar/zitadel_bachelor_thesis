@@ -15,7 +15,7 @@ const (
 )
 
 type GlobalOrgSetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	OrgID string `json:"globalOrgId"`
 }
@@ -45,12 +45,13 @@ func NewGlobalOrgSetEventEvent(
 
 func GlobalOrgSetMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GlobalOrgSetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "IAM-cdFZH", "unable to unmarshal global org set")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

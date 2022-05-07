@@ -10,7 +10,7 @@ import (
 )
 
 type HumanWebAuthNAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	WebAuthNTokenID string `json:"webAuthNTokenId"`
 	Challenge       string `json:"challenge"`
@@ -38,17 +38,18 @@ func NewHumanWebAuthNAddedEvent(
 
 func HumanWebAuthNAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webAuthNAdded := &HumanWebAuthNAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webAuthNAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-tB8sf", "unable to unmarshal human webAuthN added")
 	}
+	webAuthNAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webAuthNAdded, nil
 }
 
 type HumanWebAuthNVerifiedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	WebAuthNTokenID   string `json:"webAuthNTokenId"`
 	KeyID             []byte `json:"keyId"`
@@ -94,17 +95,18 @@ func NewHumanWebAuthNVerifiedEvent(
 
 func HumanWebAuthNVerifiedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webauthNVerified := &HumanWebAuthNVerifiedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webauthNVerified)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-B0zDs", "unable to unmarshal human webAuthN verified")
 	}
+	webauthNVerified.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webauthNVerified, nil
 }
 
 type HumanWebAuthNSignCountChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	WebAuthNTokenID string `json:"webAuthNTokenId"`
 	SignCount       uint32 `json:"signCount"`
@@ -132,17 +134,18 @@ func NewHumanWebAuthNSignCountChangedEvent(
 
 func HumanWebAuthNSignCountChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webauthNVerified := &HumanWebAuthNSignCountChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webauthNVerified)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5Gm0s", "unable to unmarshal human webAuthN sign count")
 	}
+	webauthNVerified.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webauthNVerified, nil
 }
 
 type HumanWebAuthNRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	WebAuthNTokenID string          `json:"webAuthNTokenId"`
 	State           domain.MFAState `json:"-"`
@@ -168,17 +171,18 @@ func NewHumanWebAuthNRemovedEvent(
 
 func HumanWebAuthNRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webauthNVerified := &HumanWebAuthNRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webauthNVerified)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-gM9sd", "unable to unmarshal human webAuthN token removed")
 	}
+	webauthNVerified.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webauthNVerified, nil
 }
 
 type HumanWebAuthNBeginLoginEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Challenge            string                             `json:"challenge"`
 	AllowedCredentialIDs [][]byte                           `json:"allowedCredentialIDs"`
@@ -206,17 +210,18 @@ func NewHumanWebAuthNBeginLoginEvent(base *eventstore.BaseEvent, challenge strin
 
 func HumanWebAuthNBeginLoginEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webAuthNAdded := &HumanWebAuthNBeginLoginEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webAuthNAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-rMb8x", "unable to unmarshal human webAuthN begin login")
 	}
+	webAuthNAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webAuthNAdded, nil
 }
 
 type HumanWebAuthNCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -239,17 +244,18 @@ func NewHumanWebAuthNCheckSucceededEvent(
 
 func HumanWebAuthNCheckSucceededEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webAuthNAdded := &HumanWebAuthNCheckSucceededEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webAuthNAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-2M0fg", "unable to unmarshal human webAuthN check succeeded")
 	}
+	webAuthNAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webAuthNAdded, nil
 }
 
 type HumanWebAuthNCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -272,11 +278,12 @@ func NewHumanWebAuthNCheckFailedEvent(
 
 func HumanWebAuthNCheckFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	webAuthNAdded := &HumanWebAuthNCheckFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, webAuthNAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-O0dse", "unable to unmarshal human webAuthN check failed")
 	}
+	webAuthNAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return webAuthNAdded, nil
 }

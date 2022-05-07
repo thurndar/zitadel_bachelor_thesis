@@ -21,7 +21,7 @@ const (
 )
 
 type OIDCConfigAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Version                  domain.OIDCVersion         `json:"oidcVersion,omitempty"`
 	AppID                    string                     `json:"appId"`
@@ -99,19 +99,20 @@ func NewOIDCConfigAddedEvent(
 
 func OIDCConfigAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-BFd15", "unable to unmarshal oidc config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type OIDCConfigChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Version                  *domain.OIDCVersion         `json:"oidcVersion,omitempty"`
 	AppID                    string                      `json:"appId"`
@@ -250,19 +251,20 @@ func ChangeAdditionalOrigins(additionalOrigins []string) func(event *OIDCConfigC
 
 func OIDCConfigChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-BFd15", "unable to unmarshal oidc config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type OIDCConfigSecretChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID        string              `json:"appId"`
 	ClientSecret *crypto.CryptoValue `json:"clientSecret,omitempty"`
@@ -295,19 +297,20 @@ func NewOIDCConfigSecretChangedEvent(
 
 func OIDCConfigSecretChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigSecretChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-M893d", "unable to unmarshal oidc config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type OIDCConfigSecretCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId"`
 }
@@ -337,19 +340,20 @@ func NewOIDCConfigSecretCheckSucceededEvent(
 
 func OIDCConfigSecretCheckSucceededEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigSecretCheckSucceededEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-837gV", "unable to unmarshal oidc config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type OIDCConfigSecretCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId"`
 }
@@ -379,13 +383,14 @@ func NewOIDCConfigSecretCheckFailedEvent(
 
 func OIDCConfigSecretCheckFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &OIDCConfigSecretCheckFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "OIDC-987g%", "unable to unmarshal oidc config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

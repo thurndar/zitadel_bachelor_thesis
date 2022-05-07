@@ -17,7 +17,7 @@ const (
 )
 
 type MachineAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserName              string `json:"userName"`
 	userLoginMustBeDomain bool   `json:"-"`
@@ -57,18 +57,19 @@ func NewMachineAddedEvent(
 
 func MachineAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	machineAdded := &MachineAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, machineAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-tMv9s", "unable to unmarshal machine added")
 	}
+	machineAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return machineAdded, nil
 }
 
 type MachineChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name        *string `json:"name,omitempty"`
 	Description *string `json:"description,omitempty"`
@@ -119,12 +120,13 @@ func ChangeDescription(description string) func(event *MachineChangedEvent) {
 
 func MachineChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	machineChanged := &MachineChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, machineChanged)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-4M9ds", "unable to unmarshal machine changed")
 	}
+	machineChanged.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return machineChanged, nil
 }

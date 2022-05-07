@@ -32,7 +32,7 @@ func NewRemoveOrgNameUniqueConstraint(orgName string) *eventstore.EventUniqueCon
 }
 
 type OrgAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name string `json:"name,omitempty"`
 }
@@ -58,18 +58,19 @@ func NewOrgAddedEvent(ctx context.Context, aggregate *eventstore.Aggregate, name
 
 func OrgAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgAdded := &OrgAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-Bren2", "unable to unmarshal org added")
 	}
+	orgAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgAdded, nil
 }
 
 type OrgChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name    string `json:"name,omitempty"`
 	oldName string `json:"-"`
@@ -100,18 +101,19 @@ func NewOrgChangedEvent(ctx context.Context, aggregate *eventstore.Aggregate, ol
 
 func OrgChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgChanged := &OrgChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgChanged)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-Bren2", "unable to unmarshal org added")
 	}
+	orgChanged.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgChanged, nil
 }
 
 type OrgDeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *OrgDeactivatedEvent) Data() interface{} {
@@ -139,7 +141,7 @@ func OrgDeactivatedEventMapper(event *repository.Event) (eventstore.Event, error
 }
 
 type OrgReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *OrgReactivatedEvent) Data() interface{} {
@@ -167,8 +169,8 @@ func OrgReactivatedEventMapper(event *repository.Event) (eventstore.Event, error
 }
 
 type OrgRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
-	name                 string
+	eventstore.BaseEvent
+	name string
 }
 
 func (e *OrgRemovedEvent) Data() interface{} {
@@ -192,12 +194,13 @@ func NewOrgRemovedEvent(ctx context.Context, aggregate *eventstore.Aggregate, na
 
 func OrgRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgChanged := &OrgRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgChanged)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-DAfbs", "unable to unmarshal org deactivated")
 	}
+	orgChanged.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgChanged, nil
 }

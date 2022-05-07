@@ -31,7 +31,7 @@ func NewRemoveMailTextUniqueConstraint(aggregateID, mailTextType, langugage stri
 }
 
 type MailTextAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MailTextType string `json:"mailTextType,omitempty"`
 	Language     string `json:"language,omitempty"`
@@ -77,19 +77,20 @@ func NewMailTextAddedEvent(
 
 func MailTextAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MailTextAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-5m9if", "unable to unmarshal mail text policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MailTextChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MailTextType string  `json:"mailTextType,omitempty"`
 	Language     string  `json:"language,omitempty"`
@@ -169,19 +170,20 @@ func ChangeButtonText(buttonText string) func(*MailTextChangedEvent) {
 
 func MailTextChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MailTextChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-bn88u", "unable to unmarshal mail text policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MailTextRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MailTextType string `json:"mailTextType,omitempty"`
 	Language     string `json:"language,omitempty"`

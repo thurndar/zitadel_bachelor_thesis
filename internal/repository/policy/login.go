@@ -17,7 +17,7 @@ const (
 )
 
 type LoginPolicyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AllowUserNamePassword  bool                    `json:"allowUsernamePassword,omitempty"`
 	AllowRegister          bool                    `json:"allowRegister,omitempty"`
@@ -60,19 +60,20 @@ func NewLoginPolicyAddedEvent(
 
 func LoginPolicyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LoginPolicyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-nWndT", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LoginPolicyChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AllowUserNamePassword  *bool                    `json:"allowUsernamePassword,omitempty"`
 	AllowRegister          *bool                    `json:"allowRegister,omitempty"`
@@ -153,19 +154,20 @@ func ChangeIgnoreUnknownUsernames(ignoreUnknownUsernames bool) func(*LoginPolicy
 
 func LoginPolicyChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LoginPolicyChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-ehssl", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LoginPolicyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *LoginPolicyRemovedEvent) Data() interface{} {

@@ -15,7 +15,7 @@ const (
 )
 
 type ProjectSetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	ProjectID string `json:"iamProjectId"`
 }
@@ -45,12 +45,13 @@ func NewIAMProjectSetEvent(
 
 func ProjectSetMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ProjectSetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "IAM-cdFZH", "unable to unmarshal global org set")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

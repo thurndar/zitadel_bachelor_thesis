@@ -17,7 +17,7 @@ const (
 )
 
 type MailTemplateAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Template []byte `json:"template,omitempty"`
 }
@@ -42,19 +42,20 @@ func NewMailTemplateAddedEvent(
 
 func MailTemplateAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MailTemplateAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-5m9if", "unable to unmarshal mail template")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MailTemplateChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Template *[]byte `json:"template,omitempty"`
 }
@@ -93,19 +94,20 @@ func ChangeTemplate(template []byte) func(*MailTemplateChangedEvent) {
 
 func MailTemplateChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MailTemplateChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-3uu8K", "unable to unmarshal mail template policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MailTemplateRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *MailTemplateRemovedEvent) Data() interface{} {

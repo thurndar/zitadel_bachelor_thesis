@@ -35,7 +35,7 @@ func NewRemoveApplicationUniqueConstraint(name, projectID string) *eventstore.Ev
 }
 
 type ApplicationAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId,omitempty"`
 	Name  string `json:"name,omitempty"`
@@ -68,19 +68,20 @@ func NewApplicationAddedEvent(
 
 func ApplicationAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "APPLICATION-Nffg2", "unable to unmarshal application")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ApplicationChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID   string `json:"appId,omitempty"`
 	Name    string `json:"name,omitempty"`
@@ -119,19 +120,20 @@ func NewApplicationChangedEvent(
 
 func ApplicationChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "APPLICATION-9l0cs", "unable to unmarshal application")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ApplicationDeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId,omitempty"`
 }
@@ -161,19 +163,20 @@ func NewApplicationDeactivatedEvent(
 
 func ApplicationDeactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationDeactivatedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "APPLICATION-0p9fB", "unable to unmarshal application")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ApplicationReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId,omitempty"`
 }
@@ -203,19 +206,20 @@ func NewApplicationReactivatedEvent(
 
 func ApplicationReactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationReactivatedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "APPLICATION-1m9e3", "unable to unmarshal application")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ApplicationRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId,omitempty"`
 	name  string
@@ -248,13 +252,14 @@ func NewApplicationRemovedEvent(
 
 func ApplicationRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ApplicationRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "APPLICATION-1m9e3", "unable to unmarshal application")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

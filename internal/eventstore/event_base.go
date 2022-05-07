@@ -11,19 +11,19 @@ import (
 
 //BaseEvent represents the minimum metadata of an event
 type BaseEvent struct {
-	EventType EventType `json:"-"`
+	EventType EventType
 
-	aggregate Aggregate
+	AggregateField Aggregate
 
-	sequence                      uint64
-	creationDate                  time.Time
-	previousAggregateSequence     uint64
-	previousAggregateTypeSequence uint64
+	SequenceField                      uint64
+	CreationDateField                  time.Time
+	PreviousAggregateSequenceField     uint64
+	PreviousAggregateTypeSequenceField uint64
 
 	//User who created the event
-	User string `json:"-"`
+	User string
 	//Service which created the event
-	Service string `json:"-"`
+	Service string
 	Data    []byte `json:"-"`
 }
 
@@ -44,17 +44,17 @@ func (e *BaseEvent) Type() EventType {
 
 //Sequence is an upcounting unique number of the event
 func (e *BaseEvent) Sequence() uint64 {
-	return e.sequence
+	return e.SequenceField
 }
 
 //CreationDate is the the time, the event is inserted into the eventstore
 func (e *BaseEvent) CreationDate() time.Time {
-	return e.creationDate
+	return e.CreationDateField
 }
 
 //Aggregate represents the metadata of the event's aggregate
 func (e *BaseEvent) Aggregate() Aggregate {
-	return e.aggregate
+	return e.AggregateField
 }
 
 //Data returns the payload of the event. It represent the changed fields by the event
@@ -64,31 +64,31 @@ func (e *BaseEvent) DataAsBytes() []byte {
 
 //PreviousAggregateSequence implements EventReader
 func (e *BaseEvent) PreviousAggregateSequence() uint64 {
-	return e.previousAggregateSequence
+	return e.PreviousAggregateSequenceField
 }
 
 //PreviousAggregateTypeSequence implements EventReader
 func (e *BaseEvent) PreviousAggregateTypeSequence() uint64 {
-	return e.previousAggregateTypeSequence
+	return e.PreviousAggregateTypeSequenceField
 }
 
 //BaseEventFromRepo maps a stored event to a BaseEvent
 func BaseEventFromRepo(event *repository.Event) *BaseEvent {
 	return &BaseEvent{
-		aggregate: Aggregate{
+		AggregateField: Aggregate{
 			ID:            event.AggregateID,
 			Type:          AggregateType(event.AggregateType),
 			ResourceOwner: event.ResourceOwner.String,
 			Version:       Version(event.Version),
 		},
-		EventType:                     EventType(event.Type),
-		creationDate:                  event.CreationDate,
-		sequence:                      event.Sequence,
-		previousAggregateSequence:     event.PreviousAggregateSequence,
-		previousAggregateTypeSequence: event.PreviousAggregateTypeSequence,
-		Service:                       event.EditorService,
-		User:                          event.EditorUser,
-		Data:                          event.Data,
+		EventType:                          EventType(event.Type),
+		CreationDateField:                  event.CreationDate,
+		SequenceField:                      event.Sequence,
+		PreviousAggregateSequenceField:     event.PreviousAggregateSequence,
+		PreviousAggregateTypeSequenceField: event.PreviousAggregateTypeSequence,
+		Service:                            event.EditorService,
+		User:                               event.EditorUser,
+		Data:                               event.Data,
 	}
 }
 
@@ -97,9 +97,9 @@ func BaseEventFromRepo(event *repository.Event) *BaseEvent {
 // afterwards the resource owner of the first previous events is taken
 func NewBaseEventForPush(ctx context.Context, aggregate *Aggregate, typ EventType) *BaseEvent {
 	return &BaseEvent{
-		aggregate: *aggregate,
-		User:      authz.GetCtxData(ctx).UserID,
-		Service:   service.FromContext(ctx),
-		EventType: typ,
+		AggregateField: *aggregate,
+		User:           authz.GetCtxData(ctx).UserID,
+		Service:        service.FromContext(ctx),
+		EventType:      typ,
 	}
 }

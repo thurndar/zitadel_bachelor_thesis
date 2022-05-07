@@ -34,7 +34,7 @@ func NewRemoveActionNameUniqueConstraint(actionName, resourceOwner string) *even
 }
 
 type AddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name          string        `json:"name"`
 	Script        string        `json:"script,omitempty"`
@@ -73,19 +73,20 @@ func NewAddedEvent(
 
 func AddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &AddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ACTION-4n8vs", "unable to unmarshal action added")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name          *string        `json:"name,omitempty"`
 	Script        *string        `json:"script,omitempty"`
@@ -158,19 +159,20 @@ func ChangeAllowedToFail(allowedToFail bool) func(event *ChangedEvent) {
 
 func ChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ACTION-4n8vs", "unable to unmarshal action changed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type DeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *DeactivatedEvent) Data() interface{} {
@@ -198,7 +200,7 @@ func DeactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 }
 
 type ReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *ReactivatedEvent) Data() interface{} {
@@ -226,7 +228,7 @@ func ReactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 }
 
 type RemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	name string
 }

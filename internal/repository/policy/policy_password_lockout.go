@@ -16,7 +16,7 @@ const (
 )
 
 type LockoutPolicyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MaxPasswordAttempts uint64 `json:"maxPasswordAttempts,omitempty"`
 	ShowLockOutFailures bool   `json:"showLockOutFailures,omitempty"`
@@ -45,19 +45,20 @@ func NewLockoutPolicyAddedEvent(
 
 func LockoutPolicyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LockoutPolicyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-8XiVd", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LockoutPolicyChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MaxPasswordAttempts *uint64 `json:"maxPasswordAttempts,omitempty"`
 	ShowLockOutFailures *bool   `json:"showLockOutFailures,omitempty"`
@@ -103,19 +104,20 @@ func ChangeShowLockOutFailures(showLockOutFailures bool) func(*LockoutPolicyChan
 
 func LockoutPolicyChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LockoutPolicyChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-lWGRc", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LockoutPolicyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *LockoutPolicyRemovedEvent) Data() interface{} {

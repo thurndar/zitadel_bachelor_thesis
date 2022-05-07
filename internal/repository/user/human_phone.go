@@ -22,7 +22,7 @@ const (
 )
 
 type HumanPhoneChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	PhoneNumber string `json:"phone,omitempty"`
 }
@@ -48,18 +48,19 @@ func NewHumanPhoneChangedEvent(ctx context.Context, aggregate *eventstore.Aggreg
 
 func HumanPhoneChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	phoneChangedEvent := &HumanPhoneChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, phoneChangedEvent)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5M0pd", "unable to unmarshal human phone changed")
 	}
+	phoneChangedEvent.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return phoneChangedEvent, nil
 }
 
 type HumanPhoneRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanPhoneRemovedEvent) Data() interface{} {
@@ -87,7 +88,7 @@ func HumanPhoneRemovedEventMapper(event *repository.Event) (eventstore.Event, er
 }
 
 type HumanPhoneVerifiedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IsPhoneVerified bool `json:"-"`
 }
@@ -118,7 +119,7 @@ func HumanPhoneVerifiedEventMapper(event *repository.Event) (eventstore.Event, e
 }
 
 type HumanPhoneVerificationFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanPhoneVerificationFailedEvent) Data() interface{} {
@@ -146,7 +147,7 @@ func HumanPhoneVerificationFailedEventMapper(event *repository.Event) (eventstor
 }
 
 type HumanPhoneCodeAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Code   *crypto.CryptoValue `json:"code,omitempty"`
 	Expiry time.Duration       `json:"expiry,omitempty"`
@@ -179,18 +180,19 @@ func NewHumanPhoneCodeAddedEvent(
 
 func HumanPhoneCodeAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	codeAdded := &HumanPhoneCodeAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, codeAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-6Ms9d", "unable to unmarshal human phone code added")
 	}
+	codeAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return codeAdded, nil
 }
 
 type HumanPhoneCodeSentEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanPhoneCodeSentEvent) Data() interface{} {

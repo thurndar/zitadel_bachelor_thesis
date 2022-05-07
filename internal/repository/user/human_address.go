@@ -16,7 +16,7 @@ const (
 )
 
 type HumanAddressChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Country       *string `json:"country,omitempty"`
 	Locality      *string `json:"locality,omitempty"`
@@ -88,12 +88,13 @@ func ChangeStreetAddress(street string) func(event *HumanAddressChangedEvent) {
 
 func HumanAddressChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	addressChanged := &HumanAddressChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, addressChanged)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5M0pd", "unable to unmarshal human address changed")
 	}
+	addressChanged.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return addressChanged, nil
 }

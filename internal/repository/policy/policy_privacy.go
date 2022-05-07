@@ -16,7 +16,7 @@ const (
 )
 
 type PrivacyPolicyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TOSLink     string `json:"tosLink,omitempty"`
 	PrivacyLink string `json:"privacyLink,omitempty"`
@@ -53,12 +53,13 @@ func PrivacyPolicyAddedEventMapper(event *repository.Event) (eventstore.Event, e
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-2k0fs", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type PrivacyPolicyChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TOSLink     *string `json:"tosLink,omitempty"`
 	PrivacyLink *string `json:"privacyLink,omitempty"`
@@ -111,19 +112,20 @@ func ChangeHelpLink(helpLink string) func(*PrivacyPolicyChangedEvent) {
 
 func PrivacyPolicyChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &PrivacyPolicyChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-22nf9", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type PrivacyPolicyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *PrivacyPolicyRemovedEvent) Data() interface{} {

@@ -36,7 +36,7 @@ func NewRemoveProjectGrantUniqueConstraint(grantedOrgID, projectID string) *even
 }
 
 type GrantAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID      string   `json:"grantId,omitempty"`
 	GrantedOrgID string   `json:"grantedOrgId,omitempty"`
@@ -72,19 +72,20 @@ func NewGrantAddedEvent(
 
 func GrantAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-mL0vs", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID  string   `json:"grantId,omitempty"`
 	RoleKeys []string `json:"roleKeys,omitempty"`
@@ -117,19 +118,20 @@ func NewGrantChangedEvent(
 
 func GrantChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-mL0vs", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantCascadeChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID  string   `json:"grantId,omitempty"`
 	RoleKeys []string `json:"roleKeys,omitempty"`
@@ -162,19 +164,20 @@ func NewGrantCascadeChangedEvent(
 
 func GrantCascadeChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantCascadeChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-9o0se", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantDeactivateEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID string `json:"grantId,omitempty"`
 }
@@ -204,19 +207,20 @@ func NewGrantDeactivateEvent(
 
 func GrantDeactivateEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantDeactivateEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-9o0se", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID string `json:"grantId,omitempty"`
 }
@@ -246,19 +250,20 @@ func NewGrantReactivatedEvent(
 
 func GrantReactivatedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantReactivatedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-78f7D", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type GrantRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	GrantID      string `json:"grantId,omitempty"`
 	grantedOrgID string
@@ -291,13 +296,14 @@ func NewGrantRemovedEvent(
 
 func GrantRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &GrantRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-28jM8", "unable to unmarshal project grant")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

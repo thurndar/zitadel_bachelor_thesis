@@ -17,7 +17,7 @@ const (
 )
 
 type FeaturesSetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TierName                 *string                `json:"tierName,omitempty"`
 	TierDescription          *string                `json:"tierDescription,omitempty"`
@@ -205,19 +205,20 @@ func ChangeMaxActions(maxActions int) func(event *FeaturesSetEvent) {
 
 func FeaturesSetEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &FeaturesSetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "FEATURES-fdgDg", "unable to unmarshal features")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type FeaturesRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *FeaturesRemovedEvent) Data() interface{} {

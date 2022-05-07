@@ -18,7 +18,7 @@ const (
 )
 
 type MachineKeyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	KeyID          string              `json:"keyId,omitempty"`
 	KeyType        domain.AuthNKeyType `json:"type,omitempty"`
@@ -57,7 +57,7 @@ func NewMachineKeyAddedEvent(
 
 func MachineKeyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	machineKeyAdded := &MachineKeyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, machineKeyAdded)
 	if err != nil {
@@ -69,11 +69,13 @@ func MachineKeyAddedEventMapper(event *repository.Event) (eventstore.Event, erro
 		return nil, errors.ThrowInternal(err, "USER-p0ovS", "unable to unmarshal machine key added")
 	}
 
+	machineKeyAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
+
 	return machineKeyAdded, nil
 }
 
 type MachineKeyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	KeyID string `json:"keyId,omitempty"`
 }
@@ -103,12 +105,13 @@ func NewMachineKeyRemovedEvent(
 
 func MachineKeyRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	machineRemoved := &MachineKeyRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, machineRemoved)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5Gm9s", "unable to unmarshal machine key removed")
 	}
+	machineRemoved.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return machineRemoved, nil
 }

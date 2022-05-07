@@ -49,13 +49,14 @@ func NewTriggerActionsSetEvent(
 
 func TriggerActionsSetEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &TriggerActionsSetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "FLOW-4n8vs", "unable to unmarshal trigger actions")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -90,13 +91,14 @@ func NewTriggerActionsCascadeRemovedEvent(
 
 func TriggerActionsCascadeRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &TriggerActionsCascadeRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "FLOW-4n8vs", "unable to unmarshal trigger actions")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -127,13 +129,14 @@ func NewFlowClearedEvent(
 
 func FlowClearedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &FlowClearedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "FLOW-BHfg2", "unable to unmarshal flow cleared")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

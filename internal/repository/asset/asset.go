@@ -14,7 +14,7 @@ const (
 )
 
 type AddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	StoreKey string `json:"storeKey"`
 }
@@ -40,19 +40,20 @@ func NewAddedEvent(
 
 func AddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &AddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ASSET-1WEAx", "unable to unmarshal asset")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type RemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	StoreKey string `json:"storeKey"`
 }
@@ -78,13 +79,14 @@ func NewRemovedEvent(
 
 func RemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &RemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ASSET-1m9PP", "unable to unmarshal asset")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

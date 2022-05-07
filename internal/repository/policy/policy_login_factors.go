@@ -20,7 +20,7 @@ const (
 )
 
 type SecondFactorAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MFAType domain.SecondFactorType `json:"mfaType,omitempty"`
 }
@@ -37,13 +37,14 @@ func NewSecondFactorAddedEvent(
 
 func SecondFactorAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &SecondFactorAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-Lp0dE", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -57,8 +58,8 @@ func (e *SecondFactorAddedEvent) UniqueConstraints() []*eventstore.EventUniqueCo
 }
 
 type SecondFactorRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
-	MFAType              domain.SecondFactorType `json:"mfaType"`
+	eventstore.BaseEvent
+	MFAType domain.SecondFactorType `json:"mfaType"`
 }
 
 func NewSecondFactorRemovedEvent(
@@ -73,13 +74,14 @@ func NewSecondFactorRemovedEvent(
 
 func SecondFactorRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &SecondFactorRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-5M9gd", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -93,7 +95,7 @@ func (e *SecondFactorRemovedEvent) UniqueConstraints() []*eventstore.EventUnique
 }
 
 type MultiFactorAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MFAType domain.MultiFactorType `json:"mfaType"`
 }
@@ -110,13 +112,14 @@ func NewMultiFactorAddedEvent(
 
 func MultiFactorAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MultiFactorAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-5Ms90", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -130,8 +133,8 @@ func (e *MultiFactorAddedEvent) UniqueConstraints() []*eventstore.EventUniqueCon
 }
 
 type MultiFactorRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
-	MFAType              domain.MultiFactorType `json:"mfaType"`
+	eventstore.BaseEvent
+	MFAType domain.MultiFactorType `json:"mfaType"`
 }
 
 func NewMultiFactorRemovedEvent(
@@ -146,13 +149,14 @@ func NewMultiFactorRemovedEvent(
 
 func MultiFactorRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MultiFactorRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-1N8sd", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

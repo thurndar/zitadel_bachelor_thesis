@@ -21,7 +21,7 @@ const (
 )
 
 type APIConfigAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID          string                   `json:"appId"`
 	ClientID       string                   `json:"clientId,omitempty"`
@@ -60,19 +60,20 @@ func NewAPIConfigAddedEvent(
 
 func APIConfigAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &APIConfigAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-BFd15", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type APIConfigChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID          string                    `json:"appId"`
 	ClientSecret   *crypto.CryptoValue       `json:"clientSecret,omitempty"`
@@ -121,19 +122,20 @@ func ChangeAPIAuthMethodType(authMethodType domain.APIAuthMethodType) func(event
 
 func APIConfigChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &APIConfigChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-BFd15", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type APIConfigSecretChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID        string              `json:"appId"`
 	ClientSecret *crypto.CryptoValue `json:"clientSecret,omitempty"`
@@ -166,19 +168,20 @@ func NewAPIConfigSecretChangedEvent(
 
 func APIConfigSecretChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &APIConfigSecretChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-M893d", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type APIConfigSecretCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId"`
 }
@@ -208,19 +211,20 @@ func NewAPIConfigSecretCheckSucceededEvent(
 
 func APIConfigSecretCheckSucceededEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &APIConfigSecretCheckSucceededEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-837gV", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type APIConfigSecretCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	AppID string `json:"appId"`
 }
@@ -250,13 +254,14 @@ func NewAPIConfigSecretCheckFailedEvent(
 
 func APIConfigSecretCheckFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &APIConfigSecretCheckFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "API-987g%", "unable to unmarshal api config")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

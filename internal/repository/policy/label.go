@@ -33,7 +33,7 @@ const (
 )
 
 type LabelPolicyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	PrimaryColor        string `json:"primaryColor,omitempty"`
 	BackgroundColor     string `json:"backgroundColor,omitempty"`
@@ -89,19 +89,20 @@ func NewLabelPolicyAddedEvent(
 
 func LabelPolicyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LabelPolicyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-puqv4", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LabelPolicyChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	PrimaryColor        *string `json:"primaryColor,omitempty"`
 	BackgroundColor     *string `json:"backgroundColor,omitempty"`
@@ -210,19 +211,20 @@ func ChangeDisableWatermark(disableWatermark bool) func(*LabelPolicyChangedEvent
 
 func LabelPolicyChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &LabelPolicyChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-qhfFb", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type LabelPolicyActivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *LabelPolicyActivatedEvent) Data() interface{} {
@@ -246,7 +248,7 @@ func LabelPolicyActivatedEventMapper(event *repository.Event) (eventstore.Event,
 }
 
 type LabelPolicyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *LabelPolicyRemovedEvent) Data() interface{} {
@@ -540,7 +542,7 @@ func LabelPolicyFontRemovedEventMapper(event *repository.Event) (eventstore.Even
 }
 
 type LabelPolicyAssetsRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *LabelPolicyAssetsRemovedEvent) Data() interface{} {

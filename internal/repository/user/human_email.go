@@ -22,7 +22,7 @@ const (
 )
 
 type HumanEmailChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	EmailAddress string `json:"email,omitempty"`
 }
@@ -48,18 +48,19 @@ func NewHumanEmailChangedEvent(ctx context.Context, aggregate *eventstore.Aggreg
 
 func HumanEmailChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	emailChangedEvent := &HumanEmailChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, emailChangedEvent)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-4M0sd", "unable to unmarshal human password changed")
 	}
+	emailChangedEvent.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return emailChangedEvent, nil
 }
 
 type HumanEmailVerifiedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IsEmailVerified bool `json:"-"`
 }
@@ -91,7 +92,7 @@ func HumanEmailVerifiedEventMapper(event *repository.Event) (eventstore.Event, e
 }
 
 type HumanEmailVerificationFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanEmailVerificationFailedEvent) Data() interface{} {
@@ -119,7 +120,7 @@ func HumanEmailVerificationFailedEventMapper(event *repository.Event) (eventstor
 }
 
 type HumanEmailCodeAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Code   *crypto.CryptoValue `json:"code,omitempty"`
 	Expiry time.Duration       `json:"expiry,omitempty"`
@@ -151,18 +152,19 @@ func NewHumanEmailCodeAddedEvent(
 
 func HumanEmailCodeAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	codeAdded := &HumanEmailCodeAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, codeAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-3M0sd", "unable to unmarshal human email code added")
 	}
+	codeAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return codeAdded, nil
 }
 
 type HumanEmailCodeSentEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanEmailCodeSentEvent) Data() interface{} {

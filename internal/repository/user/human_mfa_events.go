@@ -14,7 +14,7 @@ const (
 )
 
 type HumanMFAInitSkippedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanMFAInitSkippedEvent) Data() interface{} {

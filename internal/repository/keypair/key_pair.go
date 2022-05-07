@@ -18,7 +18,7 @@ const (
 )
 
 type AddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Usage      domain.KeyUsage `json:"usage"`
 	Algorithm  string          `json:"algorithm"`
@@ -69,13 +69,14 @@ func NewAddedEvent(
 
 func AddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &AddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "KEY-4n8vs", "unable to unmarshal key pair added")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

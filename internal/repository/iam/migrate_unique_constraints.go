@@ -14,7 +14,7 @@ const (
 )
 
 type MigrateUniqueConstraintEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	uniqueConstraintMigrations []*domain.UniqueConstraintMigration `json:"-"`
 }

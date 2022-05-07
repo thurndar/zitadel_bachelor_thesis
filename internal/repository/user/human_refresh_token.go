@@ -19,7 +19,7 @@ const (
 )
 
 type HumanRefreshTokenAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID               string        `json:"tokenId"`
 	ClientID              string        `json:"clientId"`
@@ -80,18 +80,19 @@ func NewHumanRefreshTokenAddedEvent(
 
 func HumanRefreshTokenAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	refreshTokenAdded := &HumanRefreshTokenAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, refreshTokenAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-DGr14", "unable to unmarshal refresh token added")
 	}
+	refreshTokenAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return refreshTokenAdded, nil
 }
 
 type HumanRefreshTokenRenewedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID        string        `json:"tokenId"`
 	RefreshToken   string        `json:"refreshToken"`
@@ -131,18 +132,19 @@ func NewHumanRefreshTokenRenewedEvent(
 
 func HumanRefreshTokenRenewedEventEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenAdded := &HumanRefreshTokenRenewedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-GBt21", "unable to unmarshal refresh token renewed")
 	}
+	tokenAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenAdded, nil
 }
 
 type HumanRefreshTokenRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID string `json:"tokenId"`
 }
@@ -176,12 +178,13 @@ func NewHumanRefreshTokenRemovedEvent(
 
 func HumanRefreshTokenRemovedEventEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenAdded := &HumanRefreshTokenRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Dggs2", "unable to unmarshal refresh token removed")
 	}
+	tokenAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenAdded, nil
 }

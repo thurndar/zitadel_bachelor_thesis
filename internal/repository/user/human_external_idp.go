@@ -36,7 +36,7 @@ func NewRemoveUserIDPLinkUniqueConstraint(idpConfigID, externalUserID string) *e
 }
 
 type UserIDPLinkAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID    string `json:"idpConfigId,omitempty"`
 	ExternalUserID string `json:"userId,omitempty"`
@@ -72,19 +72,20 @@ func NewUserIDPLinkAddedEvent(
 
 func UserIDPLinkAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &UserIDPLinkAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-6M9sd", "unable to unmarshal user external idp added")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type UserIDPLinkRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID    string `json:"idpConfigId"`
 	ExternalUserID string `json:"userId,omitempty"`
@@ -117,19 +118,20 @@ func NewUserIDPLinkRemovedEvent(
 
 func UserIDPLinkRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &UserIDPLinkRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5Gm9s", "unable to unmarshal user external idp removed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type UserIDPLinkCascadeRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	IDPConfigID    string `json:"idpConfigId"`
 	ExternalUserID string `json:"userId,omitempty"`
@@ -162,19 +164,20 @@ func NewUserIDPLinkCascadeRemovedEvent(
 
 func UserIDPLinkCascadeRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &UserIDPLinkCascadeRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-dKGqO", "unable to unmarshal user external idp cascade removed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type UserIDPCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -202,13 +205,14 @@ func NewUserIDPCheckSucceededEvent(
 
 func UserIDPCheckSucceededEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &UserIDPCheckSucceededEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-oikSS", "unable to unmarshal user external idp check succeeded")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

@@ -15,7 +15,7 @@ const (
 )
 
 type SetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Key   string `json:"key"`
 	Value []byte `json:"value"`
@@ -43,19 +43,20 @@ func NewSetEvent(
 
 func SetEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &SetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "META-3n9fs", "unable to unmarshal metadata set")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type RemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Key string `json:"key"`
 }
@@ -81,19 +82,20 @@ func NewRemovedEvent(
 
 func RemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &RemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "META-2m99f", "unable to unmarshal metadata removed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type RemovedAllEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *RemovedAllEvent) Data() interface{} {

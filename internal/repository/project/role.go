@@ -33,7 +33,7 @@ func NewRemoveProjectRoleUniqueConstraint(roleKey, projectID string) *eventstore
 }
 
 type RoleAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Key         string `json:"key,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
@@ -69,19 +69,20 @@ func NewRoleAddedEvent(
 
 func RoleAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &RoleAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-2M0xy", "unable to unmarshal project role")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type RoleChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Key         string  `json:"key,omitempty"`
 	DisplayName *string `json:"displayName,omitempty"`
@@ -140,19 +141,20 @@ func ChangeGroup(group string) func(event *RoleChangedEvent) {
 }
 func RoleChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &RoleChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-3M0vx", "unable to unmarshal project role")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type RoleRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Key string `json:"key,omitempty"`
 }
@@ -181,13 +183,14 @@ func NewRoleRemovedEvent(
 
 func RoleRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &RoleRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-1M0xs", "unable to unmarshal project role")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

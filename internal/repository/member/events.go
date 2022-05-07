@@ -32,7 +32,7 @@ func NewRemoveMemberUniqueConstraint(aggregateID, userID string) *eventstore.Eve
 }
 
 type MemberAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Roles  []string `json:"roles"`
 	UserID string   `json:"userId"`
@@ -61,19 +61,20 @@ func NewMemberAddedEvent(
 
 func MemberAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MemberAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-puqv4", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MemberChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Roles  []string `json:"roles,omitempty"`
 	UserID string   `json:"userId,omitempty"`
@@ -101,19 +102,20 @@ func NewMemberChangedEvent(
 
 func ChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MemberChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-puqv4", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MemberRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserID string `json:"userId"`
 }
@@ -139,19 +141,20 @@ func NewRemovedEvent(
 
 func RemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MemberRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "MEMBER-Ep4ip", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type MemberCascadeRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserID string `json:"userId"`
 }
@@ -177,13 +180,14 @@ func NewCascadeRemovedEvent(
 
 func CascadeRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &MemberCascadeRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "MEMBER-3j9sf", "unable to unmarshal label policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

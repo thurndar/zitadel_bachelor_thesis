@@ -46,13 +46,14 @@ func NewIdentityProviderAddedEvent(
 
 func IdentityProviderAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IdentityProviderAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROVI-bfNnp", "Errors.Internal")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -83,13 +84,14 @@ func NewIdentityProviderRemovedEvent(
 
 func IdentityProviderRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IdentityProviderRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROVI-6H0KQ", "Errors.Internal")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
@@ -120,13 +122,14 @@ func NewIdentityProviderCascadeRemovedEvent(
 
 func IdentityProviderCascadeRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &IdentityProviderCascadeRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROVI-7M9fs", "Errors.Internal")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

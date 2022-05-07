@@ -21,7 +21,7 @@ const (
 )
 
 type HumanOTPAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Secret *crypto.CryptoValue `json:"otpSecret,omitempty"`
 }
@@ -51,18 +51,19 @@ func NewHumanOTPAddedEvent(
 
 func HumanOTPAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	otpAdded := &HumanOTPAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, otpAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Ns9df", "unable to unmarshal human otp added")
 	}
+	otpAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return otpAdded, nil
 }
 
 type HumanOTPVerifiedEvent struct {
-	eventstore.BaseEvent `json:"-"`
-	UserAgentID          string `json:"userAgentID,omitempty"`
+	eventstore.BaseEvent
+	UserAgentID string `json:"userAgentID,omitempty"`
 }
 
 func (e *HumanOTPVerifiedEvent) Data() interface{} {
@@ -95,7 +96,7 @@ func HumanOTPVerifiedEventMapper(event *repository.Event) (eventstore.Event, err
 }
 
 type HumanOTPRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanOTPRemovedEvent) Data() interface{} {
@@ -126,7 +127,7 @@ func HumanOTPRemovedEventMapper(event *repository.Event) (eventstore.Event, erro
 }
 
 type HumanOTPCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -161,11 +162,12 @@ func HumanOTPCheckSucceededEventMapper(event *repository.Event) (eventstore.Even
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Ns9df", "unable to unmarshal human otp check succeeded")
 	}
+	otpAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return otpAdded, nil
 }
 
 type HumanOTPCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 	*AuthRequestInfo
 }
 
@@ -194,11 +196,12 @@ func NewHumanOTPCheckFailedEvent(
 
 func HumanOTPCheckFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	otpAdded := &HumanOTPCheckFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, otpAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-Ns9df", "unable to unmarshal human otp check failed")
 	}
+	otpAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 	return otpAdded, nil
 }

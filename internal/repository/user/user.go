@@ -49,7 +49,7 @@ func NewRemoveUsernameUniqueConstraint(userName, resourceOwner string, userLogin
 }
 
 type UserLockedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *UserLockedEvent) Data() interface{} {
@@ -77,7 +77,7 @@ func UserLockedEventMapper(event *repository.Event) (eventstore.Event, error) {
 }
 
 type UserUnlockedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *UserUnlockedEvent) Data() interface{} {
@@ -105,7 +105,7 @@ func UserUnlockedEventMapper(event *repository.Event) (eventstore.Event, error) 
 }
 
 type UserDeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *UserDeactivatedEvent) Data() interface{} {
@@ -133,7 +133,7 @@ func UserDeactivatedEventMapper(event *repository.Event) (eventstore.Event, erro
 }
 
 type UserReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *UserReactivatedEvent) Data() interface{} {
@@ -161,7 +161,7 @@ func UserReactivatedEventMapper(event *repository.Event) (eventstore.Event, erro
 }
 
 type UserRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	userName          string
 	externalIDPs      []*domain.UserIDPLink
@@ -209,7 +209,7 @@ func UserRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 }
 
 type UserTokenAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID           string    `json:"tokenId"`
 	ApplicationID     string    `json:"applicationId"`
@@ -260,18 +260,19 @@ func NewUserTokenAddedEvent(
 
 func UserTokenAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenAdded := &UserTokenAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-7M9sd", "unable to unmarshal token added")
 	}
+	tokenAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenAdded, nil
 }
 
 type UserTokenRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	TokenID string `json:"tokenId"`
 }
@@ -301,18 +302,19 @@ func NewUserTokenRemovedEvent(
 
 func UserTokenRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	tokenRemoved := &UserTokenRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, tokenRemoved)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-7M9sd", "unable to unmarshal token added")
 	}
+	tokenRemoved.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return tokenRemoved, nil
 }
 
 type DomainClaimedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserName              string `json:"userName"`
 	oldUserName           string `json:"-"`
@@ -351,18 +353,20 @@ func NewDomainClaimedEvent(
 
 func DomainClaimedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	domainClaimed := &DomainClaimedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, domainClaimed)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-aR8jc", "unable to unmarshal domain claimed")
 	}
 
+	domainClaimed.BaseEvent = *eventstore.BaseEventFromRepo(event)
+
 	return domainClaimed, nil
 }
 
 type DomainClaimedSentEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *DomainClaimedSentEvent) Data() interface{} {
@@ -393,7 +397,7 @@ func DomainClaimedSentEventMapper(event *repository.Event) (eventstore.Event, er
 }
 
 type UsernameChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserName              string `json:"userName"`
 	oldUserName           string `json:"-"`
@@ -432,12 +436,13 @@ func NewUsernameChangedEvent(
 
 func UsernameChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	domainClaimed := &UsernameChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, domainClaimed)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-4Bm9s", "unable to unmarshal username changed")
 	}
+	domainClaimed.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return domainClaimed, nil
 }

@@ -18,7 +18,7 @@ const (
 )
 
 type CustomTextSetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Template string       `json:"template,omitempty"`
 	Key      string       `json:"key,omitempty"`
@@ -52,19 +52,20 @@ func NewCustomTextSetEvent(
 
 func CustomTextSetEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &CustomTextSetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "TEXT-28dwe", "unable to unmarshal custom text")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type CustomTextRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Template string       `json:"template,omitempty"`
 	Key      string       `json:"key,omitempty"`
@@ -90,19 +91,20 @@ func NewCustomTextRemovedEvent(base *eventstore.BaseEvent, template, key string,
 
 func CustomTextRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &CustomTextRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "TEXT-28sMf", "unable to unmarshal custom text removed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type CustomTextTemplateRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Template string       `json:"template,omitempty"`
 	Language language.Tag `json:"language,omitempty"`
@@ -126,13 +128,14 @@ func NewCustomTextTemplateRemovedEvent(base *eventstore.BaseEvent, template stri
 
 func CustomTextTemplateRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &CustomTextTemplateRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "TEXT-mKKRs", "unable to unmarshal custom text message removed")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }

@@ -16,7 +16,7 @@ const (
 )
 
 type PasswordComplexityPolicyAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MinLength    uint64 `json:"minLength,omitempty"`
 	HasLowercase bool   `json:"hasLowercase,omitempty"`
@@ -53,19 +53,20 @@ func NewPasswordComplexityPolicyAddedEvent(
 
 func PasswordComplexityPolicyAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &PasswordComplexityPolicyAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-wYxlM", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type PasswordComplexityPolicyChangedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	MinLength    *uint64 `json:"minLength,omitempty"`
 	HasLowercase *bool   `json:"hasLowercase,omitempty"`
@@ -132,19 +133,20 @@ func ChangeHasSymbol(hasSymbol bool) func(*PasswordComplexityPolicyChangedEvent)
 
 func PasswordComplexityPolicyChangedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &PasswordComplexityPolicyChangedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "POLIC-zBGB0", "unable to unmarshal policy")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type PasswordComplexityPolicyRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *PasswordComplexityPolicyRemovedEvent) Data() interface{} {

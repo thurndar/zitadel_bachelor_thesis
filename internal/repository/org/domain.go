@@ -37,7 +37,7 @@ func NewRemoveOrgDomainUniqueConstraint(orgDomain string) *eventstore.EventUniqu
 }
 
 type DomainAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain string `json:"domain,omitempty"`
 }
@@ -63,18 +63,19 @@ func NewDomainAddedEvent(ctx context.Context, aggregate *eventstore.Aggregate, d
 
 func DomainAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainAdded := &DomainAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-GBr52", "unable to unmarshal org domain added")
 	}
+	orgDomainAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainAdded, nil
 }
 
 type DomainVerificationAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain         string                         `json:"domain,omitempty"`
 	ValidationType domain.OrgDomainValidationType `json:"validationType,omitempty"`
@@ -109,18 +110,19 @@ func NewDomainVerificationAddedEvent(
 
 func DomainVerificationAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainVerificationAdded := &DomainVerificationAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainVerificationAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-NRN32", "unable to unmarshal org domain verification added")
 	}
+	orgDomainVerificationAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainVerificationAdded, nil
 }
 
 type DomainVerificationFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain string `json:"domain,omitempty"`
 }
@@ -146,18 +148,19 @@ func NewDomainVerificationFailedEvent(ctx context.Context, aggregate *eventstore
 
 func DomainVerificationFailedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainVerificationFailed := &DomainVerificationFailedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainVerificationFailed)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-Bhm37", "unable to unmarshal org domain verification failed")
 	}
+	orgDomainVerificationFailed.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainVerificationFailed, nil
 }
 
 type DomainVerifiedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain string `json:"domain,omitempty"`
 }
@@ -183,18 +186,19 @@ func NewDomainVerifiedEvent(ctx context.Context, aggregate *eventstore.Aggregate
 
 func DomainVerifiedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainVerified := &DomainVerifiedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainVerified)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-BFSwt", "unable to unmarshal org domain verified")
 	}
+	orgDomainVerified.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainVerified, nil
 }
 
 type DomainPrimarySetEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain string `json:"domain,omitempty"`
 }
@@ -220,18 +224,19 @@ func NewDomainPrimarySetEvent(ctx context.Context, aggregate *eventstore.Aggrega
 
 func DomainPrimarySetEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainPrimarySet := &DomainPrimarySetEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainPrimarySet)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-N5787", "unable to unmarshal org domain primary set")
 	}
+	orgDomainPrimarySet.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainPrimarySet, nil
 }
 
 type DomainRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Domain     string `json:"domain,omitempty"`
 	isVerified bool
@@ -262,12 +267,13 @@ func NewDomainRemovedEvent(ctx context.Context, aggregate *eventstore.Aggregate,
 
 func DomainRemovedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	orgDomainRemoved := &DomainRemovedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, orgDomainRemoved)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "ORG-BngB2", "unable to unmarshal org domain removed")
 	}
+	orgDomainRemoved.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return orgDomainRemoved, nil
 }

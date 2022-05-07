@@ -26,7 +26,7 @@ const (
 )
 
 type HumanAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserName              string `json:"userName"`
 	userLoginMustBeDomain bool
@@ -122,18 +122,19 @@ func NewHumanAddedEvent(
 
 func HumanAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanAdded := &HumanAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanAdded)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-5Gm9s", "unable to unmarshal human added")
 	}
+	humanAdded.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanAdded, nil
 }
 
 type HumanRegisteredEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserName              string `json:"userName"`
 	userLoginMustBeDomain bool
@@ -229,20 +230,21 @@ func NewHumanRegisteredEvent(
 
 func HumanRegisteredEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanRegistered := &HumanRegisteredEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanRegistered)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-3Vm9s", "unable to unmarshal human registered")
 	}
+	humanRegistered.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanRegistered, nil
 }
 
 type HumanInitialCodeAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
-	Code                 *crypto.CryptoValue `json:"code,omitempty"`
-	Expiry               time.Duration       `json:"expiry,omitempty"`
+	eventstore.BaseEvent
+	Code   *crypto.CryptoValue `json:"code,omitempty"`
+	Expiry time.Duration       `json:"expiry,omitempty"`
 }
 
 func (e *HumanInitialCodeAddedEvent) Data() interface{} {
@@ -272,18 +274,19 @@ func NewHumanInitialCodeAddedEvent(
 
 func HumanInitialCodeAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	humanRegistered := &HumanInitialCodeAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 	err := json.Unmarshal(event.Data, humanRegistered)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "USER-bM9se", "unable to unmarshal human initial code added")
 	}
+	humanRegistered.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return humanRegistered, nil
 }
 
 type HumanInitialCodeSentEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanInitialCodeSentEvent) Data() interface{} {
@@ -311,7 +314,7 @@ func HumanInitialCodeSentEventMapper(event *repository.Event) (eventstore.Event,
 }
 
 type HumanInitializedCheckSucceededEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanInitializedCheckSucceededEvent) Data() interface{} {
@@ -339,7 +342,7 @@ func HumanInitializedCheckSucceededEventMapper(event *repository.Event) (eventst
 }
 
 type HumanInitializedCheckFailedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *HumanInitializedCheckFailedEvent) Data() interface{} {
@@ -367,7 +370,7 @@ func HumanInitializedCheckFailedEventMapper(event *repository.Event) (eventstore
 }
 
 type HumanSignedOutEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	UserAgentID string `json:"userAgentID"`
 }

@@ -35,7 +35,7 @@ func NewRemoveProjectNameUniqueConstraint(projectName, resourceOwner string) *ev
 }
 
 type ProjectAddedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name                   string                        `json:"name,omitempty"`
 	ProjectRoleAssertion   bool                          `json:"projectRoleAssertion,omitempty"`
@@ -77,7 +77,7 @@ func NewProjectAddedEvent(
 
 func ProjectAddedEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ProjectAddedEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
@@ -85,11 +85,13 @@ func ProjectAddedEventMapper(event *repository.Event) (eventstore.Event, error) 
 		return nil, errors.ThrowInternal(err, "PROJECT-Bfg2f", "unable to unmarshal project")
 	}
 
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
+
 	return e, nil
 }
 
 type ProjectChangeEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name                   *string                        `json:"name,omitempty"`
 	ProjectRoleAssertion   *bool                          `json:"projectRoleAssertion,omitempty"`
@@ -170,19 +172,20 @@ func ChangePrivateLabelingSetting(ChangePrivateLabelingSetting domain.PrivateLab
 
 func ProjectChangeEventMapper(event *repository.Event) (eventstore.Event, error) {
 	e := &ProjectChangeEvent{
-		BaseEvent: *eventstore.BaseEventFromRepo(event),
+		// BaseEvent: *eventstore.BaseEventFromRepo(event),
 	}
 
 	err := json.Unmarshal(event.Data, e)
 	if err != nil {
 		return nil, errors.ThrowInternal(err, "PROJECT-M9osd", "unable to unmarshal project")
 	}
+	e.BaseEvent = *eventstore.BaseEventFromRepo(event)
 
 	return e, nil
 }
 
 type ProjectDeactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *ProjectDeactivatedEvent) Data() interface{} {
@@ -210,7 +213,7 @@ func ProjectDeactivatedEventMapper(event *repository.Event) (eventstore.Event, e
 }
 
 type ProjectReactivatedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 }
 
 func (e *ProjectReactivatedEvent) Data() interface{} {
@@ -238,7 +241,7 @@ func ProjectReactivatedEventMapper(event *repository.Event) (eventstore.Event, e
 }
 
 type ProjectRemovedEvent struct {
-	eventstore.BaseEvent `json:"-"`
+	eventstore.BaseEvent
 
 	Name string
 }
