@@ -177,3 +177,16 @@ func mapEventToV1Event(event Event) *models.Event {
 		Data:          event.DataAsBytes(),
 	}
 }
+
+func RegisterEventType(typ EventType, creator func() Event) {
+	eventStructsMu.Lock()
+	if _, ok := eventStructs[typ]; !ok {
+		eventStructs[typ] = creator
+	}
+	eventStructsMu.Unlock()
+}
+
+var (
+	eventStructs   = map[EventType]func() Event{}
+	eventStructsMu = sync.Mutex{}
+)
