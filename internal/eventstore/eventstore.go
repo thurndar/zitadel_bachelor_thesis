@@ -19,7 +19,7 @@ var (
 
 func init() {
 	// Connect to NATS
-	nats_instance := "nats:4222"
+	nats_instance := "localhost:4222"
 	var err error
 	nc, err = nats.Connect(nats_instance)
 	if err != nil {

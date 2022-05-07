@@ -76,7 +76,7 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 
 			// nats msg to zitadel event
 			var event Event
-			tracing.SetLabel(subscribeEventTypeSpan, "event.type", string(event.Type()))
+			// tracing.SetLabel(subscribeEventTypeSpan, "event.type", string(event.Type()))
 			json.Unmarshal(msg.Data, event)
 			log.Println(event)
 
@@ -122,7 +122,7 @@ func notify(ctx context.Context, events []Event) {
 		_, notifySpan := tracing.NewNamedSpan(ctx, "notify")
 		var err error
 		defer func() { notifySpan.EndWithError(err) }()
-		tracing.SetLabel(notifySpan, "event.type", string(event.Type()))
+		// tracing.SetLabel(notifySpan, "event.type", string(event.Type()))
 
 		msg, _ := json.Marshal(event)
 		err = nc.Publish(string(event.Type()), msg)
