@@ -8,7 +8,7 @@ Tracing:
   Config:
     ProjectID: $ZITADEL_TRACING_PROJECT_ID
     MetricPrefix: ZITADEL-V1
-    Fraction: $ZITADEL_TRACING_FRACTION
+    Fraction: 1
     Endpoint: $ZITADEL_TRACING_ENDPOINT
 
 AssetStorage:
