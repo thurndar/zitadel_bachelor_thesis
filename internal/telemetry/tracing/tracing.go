@@ -6,11 +6,11 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	sdk_trace "go.opentelemetry.io/otel/sdk/trace"
-	api_trace "go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type Tracer interface {
-	NewSpan(ctx context.Context, caller string) (context.Context, *Span)
+	NewSpan(ctx context.Context, caller string, opts ...trace.SpanStartOption) (context.Context, *Span)
 	NewClientSpan(ctx context.Context, caller string) (context.Context, *Span)
 	NewServerSpan(ctx context.Context, caller string) (context.Context, *Span)
 	NewClientInterceptorSpan(ctx context.Context, name string) (context.Context, *Span)
@@ -39,11 +39,11 @@ func NewSpan(ctx context.Context) (context.Context, *Span) {
 	return T.NewSpan(ctx, GetCaller())
 }
 
-func NewNamedSpan(ctx context.Context, name string) (context.Context, *Span) {
+func NewNamedSpan(ctx context.Context, name string, opts ...trace.SpanStartOption) (context.Context, *Span) {
 	if T == nil {
 		return ctx, CreateSpan(nil)
 	}
-	return T.NewSpan(ctx, name)
+	return T.NewSpan(ctx, name, opts...)
 }
 
 func NewClientSpan(ctx context.Context) (context.Context, *Span) {
@@ -82,7 +82,7 @@ func NewSpanHTTP(r *http.Request) (*http.Request, *Span) {
 }
 
 func TraceIDFromCtx(ctx context.Context) string {
-	return api_trace.SpanFromContext(ctx).SpanContext().TraceID().String()
+	return trace.SpanFromContext(ctx).SpanContext().TraceID().String()
 }
 
 func SetLabel(s *Span, key string, value string) {
