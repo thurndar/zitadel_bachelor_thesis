@@ -2912,6 +2912,56 @@ service ManagementService {
             feature: "actions"
         };
     }
+
+
+    rpc ListEvents(ListEventsRequest) returns (ListEventsResponse) {
+        option (google.api.http) = {
+            post: "/events"
+            body: "*"
+        };
+
+        option (zitadel.v1.auth_option) = {
+            permission: "org.read"
+        };
+    }
+}
+
+message ListEventsRequest {
+    uint32 limit = 1;
+    bool desc = 2;
+    repeated AggregateQuery aggregates = 3;
+}
+
+message AggregateQuery {
+    repeated string types = 1;
+    repeated string ids = 2;
+    EventQuery event = 3;
+    uint64 sequence_greater = 4;
+    uint64 sequence_less = 5;
+}
+
+message EventQuery {
+    repeated string types = 1;
+}
+
+message ListEventsResponse {
+    repeated Event events = 1;
+}
+
+message Event {
+    uint64 sequence = 1;
+    google.protobuf.Timestamp creation_date = 2;
+    string type = 3;
+    string editor = 4;
+    Aggregate aggregate = 5;
+    bytes payload = 6;
+}
+
+message Aggregate {
+    string id = 1;
+    string type = 2;
+    string version = 3;
+    string resource_owner = 4;
 }
 
 //This is an empty request

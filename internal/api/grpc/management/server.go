@@ -7,6 +7,7 @@ import (
 	"github.com/caos/zitadel/internal/api/grpc/server"
 	"github.com/caos/zitadel/internal/command"
 	"github.com/caos/zitadel/internal/config/systemdefaults"
+	"github.com/caos/zitadel/internal/eventstore"
 	"github.com/caos/zitadel/internal/query"
 	"github.com/caos/zitadel/pkg/grpc/management"
 )
@@ -21,16 +22,18 @@ type Server struct {
 	management.UnimplementedManagementServiceServer
 	command        *command.Commands
 	query          *query.Queries
+	es             *eventstore.Eventstore
 	systemDefaults systemdefaults.SystemDefaults
 	assetAPIPrefix string
 }
 
-func CreateServer(command *command.Commands, query *query.Queries, sd systemdefaults.SystemDefaults, assetAPIPrefix string) *Server {
+func CreateServer(command *command.Commands, query *query.Queries, es *eventstore.Eventstore, sd systemdefaults.SystemDefaults, assetAPIPrefix string) *Server {
 	return &Server{
 		command:        command,
 		query:          query,
 		systemDefaults: sd,
 		assetAPIPrefix: assetAPIPrefix,
+		es:             es,
 	}
 }
 
