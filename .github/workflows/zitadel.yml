@@ -139,7 +139,7 @@ jobs:
   release:
     name: Semantic Release Images and Artifacts
     runs-on: ubuntu-18.04
-    needs: [ refs, zitadel-image, zitadel-operator-image, crdb-image ]
+    needs: [ refs, zitadel-image ]
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
     env:
       DOCKER_USERNAME: ${{ github.repository_owner }}
@@ -230,4 +230,4 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           version: zitadel-${{ needs.refs.outputs.version }}
-          projects: "console database-operator zitadel zitadel-operator zitadelctl"
+          projects: "console zitadel"
