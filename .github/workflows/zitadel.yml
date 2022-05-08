@@ -159,10 +159,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: ${{ env.ARTIFACTS_FOLDER }}/
-      - name: Workaround for exe
-        run: |
-          mv ${ARTIFACTS_FOLDER}/zitadelctl-windows-amd64/zitadelctl-windows-amd64 ${ARTIFACTS_FOLDER}/zitadelctl-windows-amd64/zitadelctl-windows-amd64.exe
-          find ${ARTIFACTS_FOLDER}
+      # - name: Workaround for exe
+      #   run: |
+      #     mv ${ARTIFACTS_FOLDER}/zitadelctl-windows-amd64/zitadelctl-windows-amd64 ${ARTIFACTS_FOLDER}/zitadelctl-windows-amd64/zitadelctl-windows-amd64.exe
+      #     find ${ARTIFACTS_FOLDER}
 
       - name: Run Semantic Release
         id: semantic
