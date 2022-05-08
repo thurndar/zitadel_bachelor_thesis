@@ -1,6 +1,7 @@
 package eventstore
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"log"
 	"sync"
@@ -9,6 +10,7 @@ import (
 	"github.com/caos/zitadel/internal/eventstore/v1/models"
 	"github.com/caos/zitadel/internal/telemetry/tracing"
 	"github.com/nats-io/nats.go"
+	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/net/context"
 )
 
@@ -22,26 +24,51 @@ type Subscription struct {
 	types  map[AggregateType][]EventType
 }
 
+type notifyEvent struct {
+	SpanCtx trace.SpanContext
+	Event   Event
+}
+
+func (e *notifyEvent) UnmarshalJSON(data []byte) (err error) {
+	fields := map[string]interface{}{}
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	spanContext := fields["SpanCtx"].(map[string]interface{})
+	spanConfig := trace.SpanContextConfig{}
+
+	if traceID, ok := spanContext["TraceID"].(string); ok {
+		spanConfig.TraceID, err = trace.TraceIDFromHex(traceID)
+		if err != nil {
+			return err
+		}
+	}
+	if spanID, ok := spanContext["SpanID"].(string); ok {
+		if spanConfig.SpanID, err = trace.SpanIDFromHex(spanID); err != nil {
+			return err
+		}
+	}
+	if traceFlags, ok := spanContext["TraceFlags"].(string); ok {
+		if _, err := hex.Decode([]byte{byte(spanConfig.TraceFlags)}[:], []byte(traceFlags)); err != nil {
+			return err
+		}
+	}
+
+	e.SpanCtx = trace.NewSpanContext(spanConfig)
+
+	eventJSON, err := json.Marshal(fields["Event"])
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(eventJSON, e.Event); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //SubscribeAggregates subscribes for all events on the given aggregates
 func SubscribeAggregates(eventQueue chan Event, aggregates ...AggregateType) *Subscription {
-	// types := make(map[AggregateType][]EventType, len(aggregates))
-	// for _, aggregate := range aggregates {
-	// 	types[aggregate] = nil
-	// }
-	// sub := &Subscription{
-	// 	Events: eventQueue,
-	// 	types:  types,
-	// }
-
-	// subsMutext.Lock()
-	// defer subsMutext.Unlock()
-
-	// for _, aggregate := range aggregates {
-	// 	subscriptions[aggregate] = append(subscriptions[aggregate], sub)
-	// }
-
-	// return sub
-
 	types := make(map[AggregateType][]EventType, len(aggregates))
 	for _, aggregate := range aggregates {
 		types[aggregate] = nil
@@ -60,30 +87,26 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 		types:  types,
 	}
 
-	// subsMutext.Lock()
-	// defer subsMutext.Unlock()
-
-	// for _, aggregate := range aggregates {
-	// 	subscriptions[aggregate] = append(subscriptions[aggregate], sub)
-	// }
 	for aggregate := range types {
 		log.Printf("Try to subscribe to %s", aggregate)
 		_, err := nc.Subscribe(string(aggregate)+".>", func(msg *nats.Msg) {
-			log.Printf("Entering the function call of event: %s", aggregate)
-			_, subscribeEventTypeSpan := tracing.NewNamedSpan(context.TODO(), "subscribeEventTypeSpan")
-			var err error
-			defer func() { subscribeEventTypeSpan.EndWithError(err) }()
-
 			// nats msg to zitadel event
-			var event = eventStructs[EventType(msg.Subject)]()
+			event := eventStructs[EventType(msg.Subject)]()
+
+			e := &notifyEvent{
+				Event: event,
+			}
 			// tracing.SetLabel(subscribeEventTypeSpan, "event.type", string(event.Type()))
-			err = json.Unmarshal(msg.Data, event)
+			err := json.Unmarshal(msg.Data, e)
 			if err != nil {
-				log.Printf("err in unmarshal: %v", err)
+				log.Printf("unable to unmarshal: %v\n", err)
 			}
 
+			// ctx := trace.ContextWithRemoteSpanContext(context.TODO(), e.SpanCtx)
+			_, span := tracing.NewNamedSpan(context.TODO(), "subscribeEventTypeSpan", trace.WithLinks(trace.Link{SpanContext: e.SpanCtx}))
+			defer func() { span.EndWithError(err) }()
+
 			sub.Events <- event
-			subscribeEventTypeSpan.End()
 		})
 		if err != nil {
 			log.Println(err)
@@ -99,34 +122,17 @@ func notify(ctx context.Context, events []Event) {
 	subsMutext.Lock()
 	defer subsMutext.Unlock()
 	for _, event := range events {
-		// subs, ok := subscriptions[event.Aggregate().Type]
-		// if !ok {
-		// 	continue
-		// }
-		// for _, sub := range subs {
-		// 	eventTypes := sub.types[event.Aggregate().Type]
-		// 	//subscription for all events
-		// 	if len(eventTypes) == 0 {
-		// 		sub.Events <- event
-		// 		continue
-		// 	}
-		// 	//subscription for certain events
-		// 	for _, eventType := range eventTypes {
-		// 		if event.Type() == eventType {
-		// 			sub.Events <- event
-		// 			break
-		// 		}
-		// 	}
-		// }
-
 		// span is missing labels, we don't know which event this mothertrucker is
 		// eventtype
 		_, notifySpan := tracing.NewNamedSpan(ctx, "notify")
 		var err error
 		defer func() { notifySpan.EndWithError(err) }()
 		// tracing.SetLabel(notifySpan, "event.type", string(event.Type()))
+		msg, _ := json.Marshal(&notifyEvent{
+			SpanCtx: notifySpan.OTELSpan().SpanContext(),
+			Event:   event,
+		})
 
-		msg, _ := json.Marshal(event)
 		err = nc.Publish(string(event.Type()), msg)
 		if err != nil {
 			log.Println(err)

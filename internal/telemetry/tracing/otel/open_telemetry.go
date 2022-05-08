@@ -7,13 +7,13 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	sdk_trace "go.opentelemetry.io/otel/sdk/trace"
-	api_trace "go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/caos/zitadel/internal/telemetry/tracing"
 )
 
 type Tracer struct {
-	Exporter api_trace.Tracer
+	Exporter trace.Tracer
 	sampler  sdk_trace.Sampler
 }
 
@@ -37,30 +37,30 @@ func (t *Tracer) Sampler() sdk_trace.Sampler {
 }
 
 func (t *Tracer) NewServerInterceptorSpan(ctx context.Context, name string) (context.Context, *tracing.Span) {
-	return t.newSpanFromName(ctx, name, api_trace.WithSpanKind(api_trace.SpanKindServer))
+	return t.newSpanFromName(ctx, name, trace.WithSpanKind(trace.SpanKindServer))
 }
 
 func (t *Tracer) NewServerSpan(ctx context.Context, caller string) (context.Context, *tracing.Span) {
-	return t.newSpan(ctx, caller, api_trace.WithSpanKind(api_trace.SpanKindServer))
+	return t.newSpan(ctx, caller, trace.WithSpanKind(trace.SpanKindServer))
 }
 
 func (t *Tracer) NewClientInterceptorSpan(ctx context.Context, name string) (context.Context, *tracing.Span) {
-	return t.newSpanFromName(ctx, name, api_trace.WithSpanKind(api_trace.SpanKindClient))
+	return t.newSpanFromName(ctx, name, trace.WithSpanKind(trace.SpanKindClient))
 }
 
 func (t *Tracer) NewClientSpan(ctx context.Context, caller string) (context.Context, *tracing.Span) {
-	return t.newSpan(ctx, caller, api_trace.WithSpanKind(api_trace.SpanKindClient))
+	return t.newSpan(ctx, caller, trace.WithSpanKind(trace.SpanKindClient))
 }
 
-func (t *Tracer) NewSpan(ctx context.Context, caller string) (context.Context, *tracing.Span) {
-	return t.newSpan(ctx, caller)
+func (t *Tracer) NewSpan(ctx context.Context, caller string, opts ...trace.SpanStartOption) (context.Context, *tracing.Span) {
+	return t.newSpan(ctx, caller, opts...)
 }
 
-func (t *Tracer) newSpan(ctx context.Context, caller string, options ...api_trace.SpanStartOption) (context.Context, *tracing.Span) {
+func (t *Tracer) newSpan(ctx context.Context, caller string, options ...trace.SpanStartOption) (context.Context, *tracing.Span) {
 	return t.newSpanFromName(ctx, caller, options...)
 }
 
-func (t *Tracer) newSpanFromName(ctx context.Context, name string, options ...api_trace.SpanStartOption) (context.Context, *tracing.Span) {
+func (t *Tracer) newSpanFromName(ctx context.Context, name string, options ...trace.SpanStartOption) (context.Context, *tracing.Span) {
 	ctx, span := t.Exporter.Start(ctx, name, options...)
 	return ctx, tracing.CreateSpan(span)
 }

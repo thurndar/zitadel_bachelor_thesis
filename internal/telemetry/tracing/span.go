@@ -43,3 +43,7 @@ func (s *Span) SetStatusByError(err error) {
 	code, msg, id, _ := grpc_errs.ExtractCaosError(err)
 	s.span.SetAttributes(attribute.Int("grpc_code", int(code)), attribute.String("grpc_msg", msg), attribute.String("error_id", id))
 }
+
+func (s *Span) OTELSpan() trace.Span {
+	return s.span
+}
