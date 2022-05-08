@@ -12,7 +12,7 @@ on:
 
 env:
   REGISTRY: darrylio
-  GITHUB_REPOSITORY: zitadel-nats-integration
+  DOCKERHUB_REPOSITORY: zitadel-nats-integration
   ARTIFACTS_FOLDER: './artifacts'
 
 jobs:
@@ -123,15 +123,15 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ github.repository_owner }}
+          username: ${{ env.REGISTRY }}
           password: ${{ secrets.DOCKERHUB }}
-          registry: ${{ env.REGISTRY }}
+          # registry: ${{ env.REGISTRY }}
       - uses: docker/build-push-action@v2
         with:
           context: .
           file: ./build/Dockerfile
           platforms: linux/amd64
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ needs.refs.outputs.sha_short }},${{ env.REGISTRY }}/${{ github.repository }}:${{ needs.refs.outputs.short_ref }}
+          tags: ${{ env.REGISTRY }}/${{ env.DOCKERHUB_REPOSITORY }}:${{ needs.refs.outputs.sha_short }},${{ env.REGISTRY }}/${{ env.DOCKERHUB_REPOSITORY }}:${{ needs.refs.outputs.short_ref }}
           push: true
           cache-from: type=gha,scope=${{ github.workflow }}
           cache-to: type=gha,scope=${{ github.workflow }},mode=max
@@ -142,7 +142,7 @@ jobs:
     needs: [ refs, zitadel-image ]
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
     env:
-      DOCKER_USERNAME: ${{ github.repository_owner }}
+      DOCKER_USERNAME: ${{ env.REGISTRY }}
       DOCKER_PASSWORD: ${{ secrets.DOCKERHUB }}
     steps:
       - name: Source checkout
@@ -150,11 +150,11 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ github.repository_owner }}
+          username: ${{ env.REGISTRY }}
           password: ${{ secrets.DOCKERHUB }}
-          registry: ${{ env.REGISTRY }}
+          # registry: ${{ env.REGISTRY }}
       - name: Docker Pull ZITADEL Image
-        run: docker pull $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }}
+        run: docker pull $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }}
       - name: Download zitadelctl Artifacts
         uses: actions/download-artifact@v2
         with:
@@ -181,28 +181,28 @@ jobs:
           echo ${{ steps.semantic.outputs.new_release_patch_version }}
       - name: Docker Tag Version
         run: |
-          docker tag $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$GITHUB_REPOSITORY:${{ steps.semantic.outputs.new_release_version }}
+          docker tag $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$DOCKERHUB_REPOSITORY:${{ steps.semantic.outputs.new_release_version }}
         if: steps.semantic.outputs.new_release_published == 'true'
       - name: Docker Tag Latest
         run: |
-          docker tag $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$GITHUB_REPOSITORY:latest
+          docker tag $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$DOCKERHUB_REPOSITORY:latest
         if: steps.semantic.outputs.new_release_published == 'true'
       - name: Docker Push Version
         run: |
-          docker push $REGISTRY/$GITHUB_REPOSITORY:${{ steps.semantic.outputs.new_release_version }}
+          docker push $REGISTRY/$DOCKERHUB_REPOSITORY:${{ steps.semantic.outputs.new_release_version }}
         if: steps.semantic.outputs.new_release_published == 'true'
       - name: Docker Push Latest
         run: |
-          docker push $REGISTRY/$GITHUB_REPOSITORY:latest
+          docker push $REGISTRY/$DOCKERHUB_REPOSITORY:latest
         if: steps.semantic.outputs.new_release_published == 'true'
 
       - name: Docker Tag Version
         run: |
-          docker tag $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.short_ref }}
+          docker tag $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.sha_short }} $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.short_ref }}
         if: steps.semantic.outputs.new_release_published != 'true' && needs.refs.outputs.short_ref != 'main' && needs.refs.outputs.short_ref != ''
       - name: Docker Push Version
         run: |
-          docker push $REGISTRY/$GITHUB_REPOSITORY:${{ needs.refs.outputs.short_ref }}
+          docker push $REGISTRY/$DOCKERHUB_REPOSITORY:${{ needs.refs.outputs.short_ref }}
         if: steps.semantic.outputs.new_release_published != 'true' && needs.refs.outputs.short_ref != 'main' && needs.refs.outputs.short_ref != ''
       - name: Development Release
         id: create_release
