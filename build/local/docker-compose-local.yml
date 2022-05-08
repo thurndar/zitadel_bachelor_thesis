@@ -101,35 +101,35 @@ services:
 # Due to the evolution of ZITADEL it's required to add additional 
 # setup steps, because of this fact it's recommended to rerun the setup
 # on each restart, at least after a new version got released
-  backend-setup:
-    profiles: ['backend']
-    restart: on-failure
-    networks:
-      - zitadel
-    depends_on:
-      db-migrations:
-        condition: service_completed_successfully
-      keys:
-        condition: service_completed_successfully
-    build:
-      context: ../..
-      dockerfile: build/zitadel/Dockerfile
-      target: dev-go-build
-      args:
-        ENV: dev
-    volumes:
-      - zitadel-keys:/go/src/github.com/caos/zitadel/.keys
-    env_file:
-      - ./local.env
-    environment:
-      - ZITADEL_EVENTSTORE_HOST=db
-    command:
-      [
-        '-setup-files=cmd/zitadel/setup.yaml',
-        '-setup-files=cmd/zitadel/system-defaults.yaml',
-        '-setup-files=cmd/zitadel/authz.yaml',
-        'setup',
-      ]
+  # backend-setup:
+  #   profiles: ['backend']
+  #   restart: on-failure
+  #   networks:
+  #     - zitadel
+  #   depends_on:
+  #     db-migrations:
+  #       condition: service_completed_successfully
+  #     keys:
+  #       condition: service_completed_successfully
+  #   build:
+  #     context: ../..
+  #     dockerfile: build/zitadel/Dockerfile
+  #     target: dev-go-build
+  #     args:
+  #       ENV: dev
+  #   volumes:
+  #     - zitadel-keys:/go/src/github.com/caos/zitadel/.keys
+  #   env_file:
+  #     - ./local.env
+  #   environment:
+  #     - ZITADEL_EVENTSTORE_HOST=db
+  #   command:
+  #     [
+  #       '-setup-files=cmd/zitadel/setup.yaml',
+  #       '-setup-files=cmd/zitadel/system-defaults.yaml',
+  #       '-setup-files=cmd/zitadel/authz.yaml',
+  #       'setup',
+  #     ]
 
 # starts the backend (API's) of ZITADEL
 # Port 50001 serves the GRPC API
@@ -151,14 +151,15 @@ services:
         condition: service_healthy
       minio: 
         condition: service_healthy
-      backend-setup:
-        condition: service_completed_successfully
-    build:
-      context: ../..
-      dockerfile: build/zitadel/Dockerfile
-      target: dev-go-build
-      args:
-        ENV: dev
+      # backend-setup:
+      #   condition: service_completed_successfully
+    # build:
+    #   context: ../..
+    #   dockerfile: build/zitadel/Dockerfile
+    #   target: dev-go-build
+    #   args:
+    #     ENV: dev
+    image: darrylio/zitadel-nats-integration:1.1
     volumes:
       - ../../.keys:/go/src/github.com/caos/zitadel/.keys
       - ../../.notifications:/go/src/github.com/caos/zitadel/.notifications
