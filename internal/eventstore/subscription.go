@@ -121,8 +121,6 @@ func notify(ctx context.Context, events []Event) {
 	subsMutext.Lock()
 	defer subsMutext.Unlock()
 	for _, event := range events {
-		// span is missing labels, we don't know which event this mothertrucker is
-		// eventtype
 		_, notifySpan := tracing.NewNamedSpan(ctx, "notify")
 		var err error
 		defer func() { notifySpan.EndWithError(err) }()
