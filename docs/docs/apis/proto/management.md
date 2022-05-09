@@ -2881,6 +2881,18 @@ Change JWT identity provider configuration of the organisation
     POST: /flows/{flow_type}/trigger/{trigger_type}
 
 
+### ListEvents
+
+> **rpc** ListEvents([ListEventsRequest](#listeventsrequest))
+[ListEventsResponse](#listeventsresponse)
+
+
+
+
+
+    POST: /events
+
+
 
 
 
@@ -3683,6 +3695,35 @@ This is an empty request
 
 
 
+### Aggregate
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| id |  string | - |  |
+| type |  string | - |  |
+| version |  string | - |  |
+| resource_owner |  string | - |  |
+
+
+
+
+### AggregateQuery
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| types | repeated string | - |  |
+| ids | repeated string | - |  |
+| event |  EventQuery | - |  |
+| sequence_greater |  uint64 | - |  |
+| sequence_less |  uint64 | - |  |
+
+
+
+
 ### BulkAddProjectRolesRequest
 
 
@@ -4029,6 +4070,33 @@ This is an empty request
 
 ### DeleteActionResponse
 
+
+
+
+
+### Event
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| sequence |  uint64 | - |  |
+| creation_date |  google.protobuf.Timestamp | - |  |
+| type |  string | - |  |
+| editor |  string | - |  |
+| aggregate |  Aggregate | - |  |
+| payload |  bytes | - |  |
+
+
+
+
+### EventQuery
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| types | repeated string | - |  |
 
 
 
@@ -5355,6 +5423,30 @@ This is an empty response
 | ----- | ---- | ----------- | ----------- |
 | details |  zitadel.v1.ListDetails | - |  |
 | result | repeated zitadel.app.v1.App | - |  |
+
+
+
+
+### ListEventsRequest
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| limit |  uint32 | - |  |
+| desc |  bool | - |  |
+| aggregates | repeated AggregateQuery | - |  |
+
+
+
+
+### ListEventsResponse
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| events | repeated Event | - |  |
 
 
 
