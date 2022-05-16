@@ -40,7 +40,7 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/k3a/html2text v1.0.8
 	github.com/kevinburke/twilio-go v0.0.0-20210327194925-1623146bcf73
-	github.com/lib/pq v1.10.4
+	github.com/lib/pq v1.10.5
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/minio/minio-go/v7 v7.0.23
