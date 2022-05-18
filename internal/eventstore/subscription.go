@@ -88,7 +88,7 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 	}
 
 	for aggregate := range types {
-		_, err := nc.Subscribe(string(aggregate)+".>", func(msg *nats.Msg) {
+		_, err := nc.QueueSubscribe(string(aggregate)+".>", "zitadel", func(msg *nats.Msg) {
 			// nats msg to zitadel event
 			event := eventStructs[EventType(msg.Subject)]()
 
