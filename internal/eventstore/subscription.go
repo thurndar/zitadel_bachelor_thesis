@@ -108,7 +108,7 @@ func SubscribeEventTypes(eventQueue chan Event, types map[AggregateType][]EventT
 			sub.Events <- event
 		})
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
 	}
 
