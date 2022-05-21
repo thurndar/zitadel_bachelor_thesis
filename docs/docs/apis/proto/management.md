@@ -19,6 +19,18 @@ title: zitadel/management.proto
     GET: /healthz
 
 
+### ReplayEvents
+
+> **rpc** ReplayEvents([ReplayEventsRequest](#replayeventsrequest))
+[ReplayEventsResponse](#replayeventsresponse)
+
+
+
+
+
+    POST: /replay-events
+
+
 ### GetOIDCInformation
 
 > **rpc** GetOIDCInformation([GetOIDCInformationRequest](#getoidcinformationrequest))
@@ -6874,6 +6886,23 @@ This is an empty response
 | Field | Type | Description | Validation |
 | ----- | ---- | ----------- | ----------- |
 | details |  zitadel.v1.ObjectDetails | - |  |
+
+
+
+
+### ReplayEventsRequest
+
+
+
+| Field | Type | Description | Validation |
+| ----- | ---- | ----------- | ----------- |
+| limit |  uint64 | - |  |
+
+
+
+
+### ReplayEventsResponse
+
 
 
 

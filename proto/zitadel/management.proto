@@ -79,6 +79,13 @@ service ManagementService {
         };
     }
 
+    rpc ReplayEvents(ReplayEventsRequest) returns (ReplayEventsResponse) {
+        option (google.api.http) = {
+            post: "/replay-events"
+            body: "*"
+        };
+    }
+
     rpc GetOIDCInformation(GetOIDCInformationRequest) returns (GetOIDCInformationResponse) {
         option (google.api.http) = {
             get: "/zitadel/docs"
@@ -2919,6 +2926,12 @@ message HealthzRequest {}
 
 //This is an empty response
 message HealthzResponse {}
+
+message ReplayEventsRequest {
+    uint64 limit = 1;
+}
+
+message ReplayEventsResponse {}
 
 //This is an empty request
 message GetOIDCInformationRequest {}

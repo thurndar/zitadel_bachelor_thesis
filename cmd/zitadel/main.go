@@ -223,7 +223,7 @@ func startAPI(ctx context.Context, conf *Config, verifier *internal_authz.TokenV
 		apis.RegisterServer(ctx, admin.CreateServer(command, query, repo, conf.SystemDefaults.Domain, conf.API.Domain+"/assets/v1/"))
 	}
 	if *managementEnabled {
-		apis.RegisterServer(ctx, management.CreateServer(command, query, conf.SystemDefaults, conf.API.Domain+"/assets/v1/"))
+		apis.RegisterServer(ctx, management.CreateServer(command, es, query, conf.SystemDefaults, conf.API.Domain+"/assets/v1/"))
 	}
 	if *authEnabled {
 		apis.RegisterServer(ctx, auth.CreateServer(command, query, authRepo, conf.SystemDefaults, conf.API.Domain+"/assets/v1/"))

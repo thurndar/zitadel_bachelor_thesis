@@ -19,7 +19,7 @@ var (
 
 func init() {
 	// Connect to NATS
-	nats_instance := "nats:4222"
+	nats_instance := "localhost:4222"
 	var err error
 	nc, err = nats.Connect(nats_instance)
 	if err != nil {
@@ -52,6 +52,30 @@ func NewEventstore(repo repository.Repository) *Eventstore {
 // It checks if the repository can serve load
 func (es *Eventstore) Health(ctx context.Context) error {
 	return es.repo.Health(ctx)
+}
+
+func (es *Eventstore) ReplayEvents(ctx context.Context, limitPerBulk uint64) error {
+	seq := uint64(0)
+	for {
+		events, err := es.Filter(ctx,
+			NewSearchQueryBuilder(ColumnsEvent).
+				OrderAsc().
+				Limit(limitPerBulk).
+				AddQuery().
+				AggregateTypes("action", "iam", "org", "project", "user", "usergrant").
+				SequenceGreater(seq).
+				Builder())
+		if err != nil {
+			return err
+		}
+
+		notify(ctx, events)
+
+		if uint64(len(events)) < limitPerBulk {
+			return nil
+		}
+		seq = events[len(events)-1].Sequence()
+	}
 }
 
 //Push pushes the events in a single transaction
