@@ -24,7 +24,7 @@ require (
 	github.com/dop251/goja v0.0.0-20211129110639-4739a1d10a51
 	github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d
 	github.com/duo-labs/webauthn v0.0.0-20211216225436-9a12cd078b8a
-	github.com/envoyproxy/protoc-gen-validate v0.6.2
+	github.com/envoyproxy/protoc-gen-validate v0.9.1
 	github.com/getsentry/sentry-go v0.11.0
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/golang/glog v1.0.0
@@ -68,12 +68,12 @@ require (
 	go.opentelemetry.io/otel/trace v1.2.0
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.10
+	golang.org/x/sync v0.1.0
+	golang.org/x/text v0.4.0
+	golang.org/x/tools v0.3.0
 	google.golang.org/api v0.74.0
 	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.28.1
 	gopkg.in/square/go-jose.v2 v2.6.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	gotest.tools v2.2.0+incompatible
@@ -203,12 +203,12 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.2.0 // indirect
 	go.opentelemetry.io/otel/internal/metric v0.25.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.10.0 // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220403103023-749bd193bc2b // indirect
-	golang.org/x/sys v0.0.0-20220403205710-6acee93ad0eb // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
+	golang.org/x/mod v0.7.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
+	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220324131243-acbaeb5b85eb // indirect
